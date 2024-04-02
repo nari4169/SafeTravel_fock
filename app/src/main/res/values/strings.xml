@@ -1,3 +1,11 @@
 <resources>
+    <!--    GENERAL    -->
     <string name="app_name">SafeTravel</string>
+    <string name="lbl_ok">OK</string>
+
+    <!--    PERMISSIONS    -->
+    <string name="lbl_permission_dialog_grant">Grant permission</string>
+    <string name="lbl_permission_dialog_title">Permission required</string>
+    <string name="lbl_permission_bluetooth_generic_message">This app needs bluetooth access in order to communicate with SafeTravel locking devices. The SafeTravel locking devices can still be managed without bluetooth, using internet connection.</string>
+    <string name="lbl_permission_bluetooth_declined_message">It seems that you permanently declined the bluetooth permission. You can go the app\'s settings to grant it.</string>
 </resources>
