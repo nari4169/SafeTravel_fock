@@ -1,4 +1,4 @@
-package com.example.safetravel.permission.model
+package com.example.safetravel.domain.model
 
 import android.Manifest
 import android.os.Build

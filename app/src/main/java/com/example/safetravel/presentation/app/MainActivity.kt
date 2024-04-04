@@ -12,9 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.safetravel.permission.components.PermissionDialog
-import com.example.safetravel.permission.model.DetailedPermission
-import com.example.safetravel.permission.viewmodel.PermissionsViewModel
+import com.example.safetravel.presentation.components.PermissionDialog
+import com.example.safetravel.domain.model.DetailedPermission
+import com.example.safetravel.presentation.viewmodel.PermissionsViewModel
 import com.example.safetravel.presentation.theme.SafeTravelTheme
 import com.example.safetravel.presentation.util.openAppSettings
 

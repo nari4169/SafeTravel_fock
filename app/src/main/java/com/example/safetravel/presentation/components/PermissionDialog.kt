@@ -1,4 +1,4 @@
-package com.example.safetravel.permission.components
+package com.example.safetravel.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.example.safetravel.R
-import com.example.safetravel.permission.model.DetailedPermission
+import com.example.safetravel.domain.model.DetailedPermission
 
 @Composable
 fun PermissionDialog(

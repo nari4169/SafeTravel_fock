@@ -1,9 +1,10 @@
-package com.example.safetravel.permission.model
+package com.example.safetravel.presentation.viewmodel.model
 
 import android.Manifest
 import android.os.Build
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.example.safetravel.domain.model.DetailedPermission
 
 data class PermissionsUiState(
     val visiblePermissionDialogQueue: SnapshotStateList<DetailedPermission> = mutableStateListOf(),

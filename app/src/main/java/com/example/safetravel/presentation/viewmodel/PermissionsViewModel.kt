@@ -1,8 +1,8 @@
-package com.example.safetravel.permission.viewmodel
+package com.example.safetravel.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.safetravel.permission.model.DetailedPermission
-import com.example.safetravel.permission.model.PermissionsUiState
+import com.example.safetravel.domain.model.DetailedPermission
+import com.example.safetravel.presentation.viewmodel.model.PermissionsUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
