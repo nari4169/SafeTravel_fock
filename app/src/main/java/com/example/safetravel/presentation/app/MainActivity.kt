@@ -30,6 +30,10 @@ class MainActivity : ComponentActivity(), BluetoothServiceHandler {
         Log.i(TAG, "Write message was successful: $isSuccessful")
     }
 
+    override fun onConnectionSuccess() {
+        Log.i(TAG, "Connection succeeded")
+    }
+
     override fun onConnectionFailed() {
         Log.i(TAG, "Connection failed")
     }

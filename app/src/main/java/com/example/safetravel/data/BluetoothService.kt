@@ -27,6 +27,7 @@ class BluetoothService(
         device: BluetoothDevice,
         socketType: SocketType
     ) {
+        handler.onConnectionSuccess()
         connectThread = null
         connectedThread = ConnectedThread(socket, socketType, this).apply { start() }
     }

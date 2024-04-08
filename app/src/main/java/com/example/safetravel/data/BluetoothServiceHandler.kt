@@ -5,6 +5,8 @@ interface BluetoothServiceHandler {
 
     fun onWriteMessage(isSuccessful: Boolean)
 
+    fun onConnectionSuccess()
+
     fun onConnectionFailed()
 
     fun onConnectionLost()
