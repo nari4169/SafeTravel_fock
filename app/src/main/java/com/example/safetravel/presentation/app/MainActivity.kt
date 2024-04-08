@@ -1,80 +1,56 @@
 package com.example.safetravel.presentation.app
 
-import android.Manifest
+import android.bluetooth.BluetoothManager
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.safetravel.presentation.components.PermissionDialog
-import com.example.safetravel.domain.model.DetailedPermission
-import com.example.safetravel.presentation.viewmodel.PermissionsViewModel
+import com.example.safetravel.data.BluetoothServiceHandler
+import com.example.safetravel.domain.runWithBluetoothPermission
 import com.example.safetravel.presentation.theme.SafeTravelTheme
-import com.example.safetravel.presentation.util.openAppSettings
 
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), BluetoothServiceHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             SafeTravelTheme {
+                val manager = this.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
                 SafeTravelApp()
-                CheckPermissions()
             }
         }
     }
 
-    @Composable
-    private fun CheckPermissions() {
-        val permissionsViewModel: PermissionsViewModel = viewModel()
-        val uiState by permissionsViewModel.permissionsUiState.collectAsStateWithLifecycle()
-        val multiplePermissionsLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestMultiplePermissions(),
-            onResult = { permissions ->
-                uiState.permissionsToRequest.forEach { permission ->
-                    val detailedPermission = when (permission) {
-                        Manifest.permission.BLUETOOTH_CONNECT,
-                        Manifest.permission.BLUETOOTH_ADMIN,
-                        Manifest.permission.BLUETOOTH -> DetailedPermission.BluetoothPermission
+    override fun onReadMessage(message: String) {
+        Log.i(TAG, "Read message: $message")
+    }
 
-                        else -> return@forEach
-                    }
-                    permissionsViewModel.onPermissionResult(
-                        permission = detailedPermission,
-                        isGranted = permissions[permission] == true
-                    )
-                }
-                permissionsViewModel.onPermissionsChecked()
-            }
-        )
+    override fun onWriteMessage(isSuccessful: Boolean) {
+        Log.i(TAG, "Write message was successful: $isSuccessful")
+    }
 
-        if (!uiState.arePermissionsChecked) {
-            SideEffect {
-                multiplePermissionsLauncher.launch(uiState.permissionsToRequest.toTypedArray())
+    override fun onConnectionFailed() {
+        Log.i(TAG, "Connection failed")
+    }
+
+    override fun onConnectionLost() {
+        Log.i(TAG, "Connection lost")
+    }
+
+    override fun runWithBluetoothPermission(block: () -> Unit) {
+        (this as Context).runWithBluetoothPermission(block)
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
+        fun startActivity(activity: StartupChecksActivity) {
+            val intent = Intent(activity, MainActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             }
+
+            activity.startActivity(intent)
+            activity.finish()
         }
-
-        uiState.visiblePermissionDialogQueue
-            .reversed()
-            .forEach { detailedPermission ->
-                PermissionDialog(
-                    permission = detailedPermission,
-                    isPermanentlyDeclined = detailedPermission.permissions.map {
-                        !shouldShowRequestPermissionRationale(it)
-                    }.any { it },
-                    onDismiss = permissionsViewModel::dismissDialog,
-                    onOkClick = {
-                        permissionsViewModel.dismissDialog()
-                        multiplePermissionsLauncher.launch(detailedPermission.permissions)
-                    },
-                    onGrantClick = ::openAppSettings,
-                    modifier = Modifier
-                )
-            }
     }
 }

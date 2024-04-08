@@ -10,7 +10,10 @@ data class PermissionsUiState(
     val visiblePermissionDialogQueue: SnapshotStateList<DetailedPermission> = mutableStateListOf(),
     val arePermissionsChecked: Boolean = false,
     val permissionsToRequest: List<String> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        listOf(Manifest.permission.BLUETOOTH_CONNECT)
+        listOf(
+            Manifest.permission.BLUETOOTH_CONNECT,
+            Manifest.permission.BLUETOOTH_SCAN,
+        )
     } else {
         listOf(
             Manifest.permission.BLUETOOTH,
