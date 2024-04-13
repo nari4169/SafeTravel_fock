@@ -7,8 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.core.content.ContextCompat
-import com.example.safetravel.domain.isBluetoothPermissionGranted
-import com.example.safetravel.domain.model.BluetoothStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -22,23 +20,20 @@ class BluetoothStatusDataSource(
     private val context: Context,
     coroutineScope: CoroutineScope
 ) {
-    companion object {
-        private const val INVALID_BLUETOOTH_STATE = -1
-    }
-
-    private val _bluetoothStatus: StateFlow<BluetoothStatus> = createFlow()
+    private val _isBluetoothOn: StateFlow<Boolean> = createFlow()
         .distinctUntilChanged()
         .stateIn(
             coroutineScope,
             SharingStarted.Lazily,
-            getBluetoothStatus(isBluetoothAdapterEnabled())
+            getBluetoothStatus()
         )
 
-    val bluetoothStatus = _bluetoothStatus
-    private fun createFlow(): Flow<BluetoothStatus> {
+    val isBluetoothOn = _isBluetoothOn
+
+    private fun createFlow(): Flow<Boolean> {
         return callbackFlow {
             val broadcastReceiver = createBroadcastReceiver { isBluetoothOn ->
-                trySend(getBluetoothStatus(isBluetoothOn))
+                trySend(isBluetoothOn)
             }
             val intentFilter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
             context.registerReceiver(broadcastReceiver, intentFilter)
@@ -49,15 +44,7 @@ class BluetoothStatusDataSource(
         }
     }
 
-    private fun getBluetoothStatus(isBluetoothOn: Boolean): BluetoothStatus {
-        return when {
-            !context.isBluetoothPermissionGranted() -> BluetoothStatus.NOT_GRANTED
-            isBluetoothOn -> BluetoothStatus.ON
-            else -> BluetoothStatus.OFF
-        }
-    }
-
-    private fun isBluetoothAdapterEnabled(): Boolean {
+    private fun getBluetoothStatus(): Boolean {
         return ContextCompat.getSystemService(context, BluetoothManager::class.java)
             ?.adapter
             ?.isEnabled
@@ -81,5 +68,9 @@ class BluetoothStatusDataSource(
                 }
             }
         }
+    }
+
+    companion object {
+        private const val INVALID_BLUETOOTH_STATE = -1
     }
 }

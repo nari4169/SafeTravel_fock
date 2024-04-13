@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.safetravel.data.datasource.BluetoothStatusDataSource
 import com.example.safetravel.data.service.BluetoothServiceHandler
+import com.example.safetravel.domain.model.BluetoothStatus
 import com.example.safetravel.presentation.viewmodel.model.MainUiState
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -20,9 +22,32 @@ class MainViewModel(
 
     init {
         viewModelScope.launch {
-            bluetoothDataSource.bluetoothStatus.collectLatest { bluetoothStatus ->
-                uiState = uiState.copy(bluetoothStatus = bluetoothStatus)
+            bluetoothDataSource.isBluetoothOn.collectLatest { isBluetoothOn ->
+                if (uiState.bluetoothStatus != BluetoothStatus.NOT_GRANTED) {
+                    uiState = uiState.copy(
+                        bluetoothStatus = when {
+                            isBluetoothOn -> BluetoothStatus.ON
+                            else -> BluetoothStatus.OFF
+                        }
+                    )
+                }
             }
+        }
+    }
+
+    fun onBluetoothPermissionResult(isGranted: Boolean) {
+        when {
+            isGranted -> viewModelScope.launch {
+                val isBluetoothOn = bluetoothDataSource.isBluetoothOn.first()
+                uiState = uiState.copy(
+                    bluetoothStatus = when {
+                        isBluetoothOn -> BluetoothStatus.ON
+                        else -> BluetoothStatus.OFF
+                    }
+                )
+            }
+
+            else -> uiState = uiState.copy(bluetoothStatus = BluetoothStatus.NOT_GRANTED)
         }
     }
 

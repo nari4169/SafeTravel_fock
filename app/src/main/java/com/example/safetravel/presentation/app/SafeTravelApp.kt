@@ -2,10 +2,8 @@ package com.example.safetravel.presentation.app
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -15,20 +13,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.example.safetravel.data.service.BluetoothService
-import com.example.safetravel.domain.model.SocketType
-import com.example.safetravel.presentation.viewmodel.MainViewModel
-import org.koin.androidx.compose.koinViewModel
+import com.example.safetravel.presentation.viewmodel.model.MainUiState
 
 @SuppressLint("MissingPermission")
 @Composable
-fun SafeTravelApp(adapter: BluetoothAdapter) {
+fun SafeTravelApp(
+    uiState: MainUiState,
+    adapter: BluetoothAdapter
+) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
-
-    val mainViewModel = koinViewModel<MainViewModel>()
-    val uiState = mainViewModel.uiState
 
     Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) { padding ->
         LazyColumn(modifier = Modifier.padding(padding)) {
