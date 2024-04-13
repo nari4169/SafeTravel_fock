@@ -8,4 +8,7 @@
     <string name="lbl_permission_dialog_title">Permission required</string>
     <string name="lbl_permission_bluetooth_generic_message">This app needs bluetooth access in order to communicate with SafeTravel locking devices. The SafeTravel locking devices can still be managed without bluetooth, using internet connection.</string>
     <string name="lbl_permission_bluetooth_declined_message">It seems that you permanently declined the bluetooth permission. You can go the app\'s settings to grant it.</string>
+    <string name="lbl_permission_bluetooth_not_granted_message">It seems that you did not grant the bluetooth permission. Unfortunately, there are no features available without bluetooth permission.</string>
+    <string name="lbl_permission_bluetooth_grant_redirect">Click here to grant permission</string>
+
 </resources>
