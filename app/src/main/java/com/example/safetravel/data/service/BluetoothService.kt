@@ -1,15 +1,18 @@
-package com.example.safetravel.data
+package com.example.safetravel.data.service
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
+import android.content.Context
 import android.util.Log
 import com.example.safetravel.domain.model.SocketType
+import com.example.safetravel.domain.runWithBluetoothPermission
 
 class BluetoothService(
     private val adapter: BluetoothAdapter,
-    private val handler: BluetoothServiceHandler
+    private val handler: BluetoothServiceHandler,
+    private val context: Context
 ) : ConnectThreadListener, ConnectedThreadListener {
     private var connectThread: ConnectThread? = null
     private var connectedThread: ConnectedThread? = null
@@ -17,7 +20,7 @@ class BluetoothService(
     @SuppressLint("MissingPermission")
     override fun onSocketCreated() {
         Log.i(TAG, "Bluetooth adapter discovery canceled")
-        handler.runWithBluetoothPermission {
+        context.runWithBluetoothPermission {
             adapter.cancelDiscovery()
         }
     }
@@ -43,7 +46,7 @@ class BluetoothService(
     override fun onConnectionLost() = handler.onConnectionLost()
 
     override fun runWithBluetoothPermission(block: () -> Unit) {
-        handler.runWithBluetoothPermission(block)
+        context.runWithBluetoothPermission(block)
     }
 
     fun connect(device: BluetoothDevice, socketType: SocketType) {

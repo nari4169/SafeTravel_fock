@@ -1,4 +1,4 @@
-package com.example.safetravel.data
+package com.example.safetravel.data.service
 
 import android.bluetooth.BluetoothSocket
 import android.util.Log

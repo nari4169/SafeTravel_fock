@@ -11,12 +11,11 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.safetravel.domain.model.DetailedPermission
 import com.example.safetravel.presentation.components.PermissionDialog
 import com.example.safetravel.presentation.theme.SafeTravelTheme
-import com.example.safetravel.presentation.util.openAppSettings
 import com.example.safetravel.presentation.viewmodel.PermissionsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 class StartupChecksActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +29,7 @@ class StartupChecksActivity : ComponentActivity() {
 
     @Composable
     private fun PermissionsCheck() {
-        val permissionsViewModel: PermissionsViewModel = viewModel()
+        val permissionsViewModel = koinViewModel<PermissionsViewModel>()
         val uiState by permissionsViewModel.permissionsUiState.collectAsStateWithLifecycle()
         val multiplePermissionsLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -39,6 +38,7 @@ class StartupChecksActivity : ComponentActivity() {
                     val detailedPermission = when (permission) {
                         Manifest.permission.BLUETOOTH_CONNECT,
                         Manifest.permission.BLUETOOTH_ADMIN,
+                        Manifest.permission.BLUETOOTH_SCAN,
                         Manifest.permission.BLUETOOTH -> DetailedPermission.BluetoothPermission
 
                         else -> return@forEach

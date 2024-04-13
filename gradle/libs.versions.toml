@@ -8,6 +8,10 @@ lifecycle-viewmodel-compose = "2.7.0"
 # COMPOSE
 compose-bom = "2024.03.00"
 
+# KOIN
+koin-android = "3.5.0"
+koin-compose = "3.5.0"
+
 # PLUGINS
 android-gradle-plugin = "8.3.1"
 kotlin-android = "1.9.23"
@@ -35,6 +39,10 @@ compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+
+# KOIN
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin-android" }
+koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin-compose" }
 
 # PERMISSIONS
 google-accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist-permissions" }

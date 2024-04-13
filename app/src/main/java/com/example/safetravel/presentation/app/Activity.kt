@@ -1,4 +1,4 @@
-package com.example.safetravel.presentation.util
+package com.example.safetravel.presentation.app
 
 import android.app.Activity
 import android.content.Intent

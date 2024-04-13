@@ -7,6 +7,10 @@ import android.os.Build
 import androidx.core.app.ActivityCompat
 
 fun Context.runWithBluetoothPermission(block: () -> Unit) {
+    if (this.isBluetoothPermissionGranted()) block()
+}
+
+fun Context.isBluetoothPermissionGranted(): Boolean {
     val neededPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         listOf(
             Manifest.permission.BLUETOOTH_CONNECT,
@@ -19,9 +23,7 @@ fun Context.runWithBluetoothPermission(block: () -> Unit) {
         )
     }
 
-    val arePermissionsGranted = neededPermissions.map {
+    return neededPermissions.map {
         ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
     }.all { it }
-
-    if (arePermissionsGranted) block()
 }

@@ -65,6 +65,10 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.compose.ui.tooling.preview)
 
+    // KOIN
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
+
     // PERMISSIONS
     implementation(libs.google.accompanist.permissions)
 

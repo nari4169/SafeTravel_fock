@@ -1,4 +1,4 @@
-package com.example.safetravel.data
+package com.example.safetravel.data.service
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice

@@ -1,4 +1,4 @@
-package com.example.safetravel.data
+package com.example.safetravel.data.service
 
 interface BluetoothServiceHandler {
     fun onReadMessage(message: String)
@@ -10,6 +10,4 @@ interface BluetoothServiceHandler {
     fun onConnectionFailed()
 
     fun onConnectionLost()
-
-    fun runWithBluetoothPermission(block: () -> Unit)
 }

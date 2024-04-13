@@ -12,6 +12,7 @@
         android:maxSdkVersion="30" />
 
     <application
+        android:name=".presentation.app.SafeTravelApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_safe_travel_app"
         android:label="@string/app_name"
@@ -23,6 +24,7 @@
         <activity
             android:name=".presentation.app.StartupChecksActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.SafeTravel">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,6 +36,7 @@
         <activity
             android:name=".presentation.app.MainActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.SafeTravel" />
     </application>
 

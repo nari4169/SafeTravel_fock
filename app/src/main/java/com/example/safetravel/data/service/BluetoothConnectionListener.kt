@@ -1,15 +1,19 @@
-package com.example.safetravel.data
+package com.example.safetravel.data.service
 
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import com.example.safetravel.domain.model.SocketType
 
-interface ConnectThreadListener {
-    fun onSocketCreated()
-
+interface BluetoothConnectionListener {
     fun onConnected(socket: BluetoothSocket, device: BluetoothDevice, socketType: SocketType)
 
     fun onConnectionFailed()
 
-    fun runWithBluetoothPermission(block: () -> Unit)
+    fun onConnectionLost()
+
+    fun onSocketCreated()
+
+    fun onServerSocketCreated()
+
+    fun onSocketAccepted(socket: BluetoothSocket, socketType: SocketType)
 }

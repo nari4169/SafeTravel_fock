@@ -12,7 +12,10 @@ sealed class DetailedPermission(
 ) {
     data object BluetoothPermission : DetailedPermission(
         permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            arrayOf(Manifest.permission.BLUETOOTH_CONNECT)
+            arrayOf(
+                Manifest.permission.BLUETOOTH_CONNECT,
+                Manifest.permission.BLUETOOTH_SCAN,
+            )
         } else {
             arrayOf(
                 Manifest.permission.BLUETOOTH,
