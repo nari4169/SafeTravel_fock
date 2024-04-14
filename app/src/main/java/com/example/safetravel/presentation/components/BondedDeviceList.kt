@@ -41,7 +41,7 @@ fun BondedDevicesList(
     val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     var bondedDevices by remember { mutableStateOf<List<BluetoothDevice>>(emptyList()) }
 
-    LazyColumn(modifier = modifier.wrapContentHeight()) {
+    LazyColumn(modifier = modifier) {
         items(bondedDevices) { device ->
             Row(
                 horizontalArrangement = Arrangement.Center,
