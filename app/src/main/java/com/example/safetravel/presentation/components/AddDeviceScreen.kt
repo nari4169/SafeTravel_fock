@@ -30,9 +30,7 @@ fun AddDeviceScreen() {
         verticalArrangement = Arrangement.spacedBy(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        BondedDevicesList(
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
+        BondedDevicesList(modifier = Modifier.padding(horizontal = 16.dp))
 
         Text(
             text = stringResource(R.string.lbl_add_device_message),
