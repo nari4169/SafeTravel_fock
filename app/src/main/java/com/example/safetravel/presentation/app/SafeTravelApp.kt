@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.safetravel.R
 import com.example.safetravel.domain.model.BluetoothStatus
-import com.example.safetravel.presentation.components.BondedDevicesList
+import com.example.safetravel.presentation.components.AddDeviceScreen
 import com.example.safetravel.presentation.viewmodel.model.MainUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,14 +45,12 @@ fun SafeTravelApp(
     }
 
     Box(modifier = modifier.fillMaxSize()) {
-
         if (showBottomSheet) {
             ModalBottomSheet(
                 sheetState = modalBottomSheetState,
-                onDismissRequest = { showBottomSheet = false }
-            ) {
-                BondedDevicesList()
-            }
+                onDismissRequest = { showBottomSheet = false },
+                content = { AddDeviceScreen() }
+            )
         }
 
         ExtendedFloatingActionButton(

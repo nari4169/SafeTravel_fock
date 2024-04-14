@@ -12,9 +12,14 @@
     <string name="lbl_permission_bluetooth_grant_redirect">Click here to grant permission</string>
 
     <!--    MAIN    -->
-    <string name="lbl_add_device">Add device</string>
     <string name="lbl_bluetooth_off_toast">Turn bluetooth on to use this function</string>
     <string name="lbl_bluetooth_off_snackbar">Bluetooth is off</string>
     <string name="lbl_enable">Enable</string>
+
+    <!--    ADD DEVICE    -->
+    <string name="lbl_add_device">Add device</string>
+    <string name="lbl_add_device_message">These are all the devices paired to the phone. Click on your SafeTravel device to add and use it. If you don\'t see your device here please pair it to the phone.</string>
+    <string name="lbl_pair_device">Pair device</string>
+    <string name="lbl_no_paired_devices">No paired devices</string>
 
 </resources>
