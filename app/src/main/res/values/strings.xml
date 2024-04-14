@@ -11,4 +11,10 @@
     <string name="lbl_permission_bluetooth_not_granted_message">It seems that you did not grant the bluetooth permission. Unfortunately, there are no features available without bluetooth permission.</string>
     <string name="lbl_permission_bluetooth_grant_redirect">Click here to grant permission</string>
 
+    <!--    MAIN    -->
+    <string name="lbl_add_device">Add device</string>
+    <string name="lbl_bluetooth_off_toast">Turn bluetooth on to use this function</string>
+    <string name="lbl_bluetooth_off_snackbar">Bluetooth is off</string>
+    <string name="lbl_enable">Enable</string>
+
 </resources>

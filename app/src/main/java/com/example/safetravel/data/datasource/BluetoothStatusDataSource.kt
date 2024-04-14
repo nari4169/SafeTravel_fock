@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.core.content.ContextCompat
+import com.example.safetravel.domain.model.BluetoothStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +21,7 @@ class BluetoothStatusDataSource(
     private val context: Context,
     coroutineScope: CoroutineScope
 ) {
-    private val _isBluetoothOn: StateFlow<Boolean> = createFlow()
+    private val _bluetoothStatus: StateFlow<BluetoothStatus> = createFlow()
         .distinctUntilChanged()
         .stateIn(
             coroutineScope,
@@ -28,12 +29,12 @@ class BluetoothStatusDataSource(
             getBluetoothStatus()
         )
 
-    val isBluetoothOn = _isBluetoothOn
+    val bluetoothStatus = _bluetoothStatus
 
-    private fun createFlow(): Flow<Boolean> {
+    private fun createFlow(): Flow<BluetoothStatus> {
         return callbackFlow {
-            val broadcastReceiver = createBroadcastReceiver { isBluetoothOn ->
-                trySend(isBluetoothOn)
+            val broadcastReceiver = createBroadcastReceiver { bluetoothStatus ->
+                trySend(bluetoothStatus)
             }
             val intentFilter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
             context.registerReceiver(broadcastReceiver, intentFilter)
@@ -44,14 +45,16 @@ class BluetoothStatusDataSource(
         }
     }
 
-    private fun getBluetoothStatus(): Boolean {
-        return ContextCompat.getSystemService(context, BluetoothManager::class.java)
-            ?.adapter
-            ?.isEnabled
-            ?: false
+    private fun getBluetoothStatus(): BluetoothStatus {
+        val manager = ContextCompat.getSystemService(context, BluetoothManager::class.java)
+        return if (manager?.adapter?.isEnabled == true) {
+            BluetoothStatus.ON
+        } else {
+            BluetoothStatus.OFF
+        }
     }
 
-    private fun createBroadcastReceiver(notify: (Boolean) -> Unit): BroadcastReceiver {
+    private fun createBroadcastReceiver(notify: (BluetoothStatus) -> Unit): BroadcastReceiver {
         return object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 if (BluetoothAdapter.ACTION_STATE_CHANGED == intent?.action) {
@@ -59,12 +62,12 @@ class BluetoothStatusDataSource(
                         BluetoothAdapter.EXTRA_STATE,
                         INVALID_BLUETOOTH_STATE
                     )
-                    val isBluetoothOn = when (state) {
-                        BluetoothAdapter.STATE_ON -> true
-                        BluetoothAdapter.STATE_OFF -> false
+                    val bluetoothStatus = when (state) {
+                        BluetoothAdapter.STATE_ON -> BluetoothStatus.ON
+                        BluetoothAdapter.STATE_OFF -> BluetoothStatus.OFF
                         else -> return
                     }
-                    notify(isBluetoothOn)
+                    notify(bluetoothStatus)
                 }
             }
         }

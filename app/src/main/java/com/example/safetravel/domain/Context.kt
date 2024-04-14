@@ -16,6 +16,10 @@ fun Context.openAppSettings() {
     ).also(::startActivity)
 }
 
+fun Context.openBluetoothSettings() {
+    Intent(Settings.ACTION_BLUETOOTH_SETTINGS,).also(::startActivity)
+}
+
 fun Context.runWithBluetoothPermission(block: () -> Unit) {
     if (this.isBluetoothPermissionGranted()) block()
 }

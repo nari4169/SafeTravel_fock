@@ -22,32 +22,9 @@ class MainViewModel(
 
     init {
         viewModelScope.launch {
-            bluetoothDataSource.isBluetoothOn.collectLatest { isBluetoothOn ->
-                if (uiState.bluetoothStatus != BluetoothStatus.NOT_GRANTED) {
-                    uiState = uiState.copy(
-                        bluetoothStatus = when {
-                            isBluetoothOn -> BluetoothStatus.ON
-                            else -> BluetoothStatus.OFF
-                        }
-                    )
-                }
+            bluetoothDataSource.bluetoothStatus.collectLatest { bluetoothStatus ->
+                uiState = uiState.copy(bluetoothStatus = bluetoothStatus)
             }
-        }
-    }
-
-    fun onBluetoothPermissionResult(isGranted: Boolean) {
-        when {
-            isGranted -> viewModelScope.launch {
-                val isBluetoothOn = bluetoothDataSource.isBluetoothOn.first()
-                uiState = uiState.copy(
-                    bluetoothStatus = when {
-                        isBluetoothOn -> BluetoothStatus.ON
-                        else -> BluetoothStatus.OFF
-                    }
-                )
-            }
-
-            else -> uiState = uiState.copy(bluetoothStatus = BluetoothStatus.NOT_GRANTED)
         }
     }
 
