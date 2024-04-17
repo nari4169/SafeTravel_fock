@@ -20,7 +20,7 @@
     <string name="lbl_add_device">Add device</string>
     <string name="lbl_add_device_message">These are all the devices paired to the phone. Click on your SafeTravel device to add and use it. If you don\'t see your device here please pair it to the phone.</string>
     <string name="lbl_pair_device">Pair device</string>
-    <string name="lbl_no_paired_devices">No paired devices</string>
+    <string name="lbl_no_newly_paired_devices">No newly paired devices</string>
 
     <!--    EMPTY SCREEN    -->
     <string name="lbl_empty_screen_message">Start your safe journey by quickly adding your SafeTravel devices!</string>

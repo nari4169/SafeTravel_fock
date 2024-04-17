@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +34,7 @@ import com.example.safetravel.presentation.components.DevicesScreen
 import com.example.safetravel.presentation.components.EmptyScreen
 import com.example.safetravel.presentation.components.LoadingScreen
 import com.example.safetravel.presentation.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MissingPermission")
@@ -43,6 +45,7 @@ fun SafeTravelApp(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val bluetoothOffToastMessage = stringResource(R.string.lbl_bluetooth_off_toast)
     val modalBottomSheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -81,8 +84,16 @@ fun SafeTravelApp(
                 onDismissRequest = { showBottomSheet = false },
                 content = {
                     AddDeviceScreen(
-                        bondedDevices = bondedDevices,
-                        onDeviceClick = viewModel::addDevice
+                        bondedDevices = bondedDevices.filter { bondedDevice ->
+                            bondedDevice.address !in uiState.devices.map { it.macAddress }
+                        },
+                        onDeviceClick = { bluetoothDevice ->
+                            val job = coroutineScope.launch { modalBottomSheetState.hide() }
+                            job.invokeOnCompletion {
+                                showBottomSheet = false
+                                viewModel.addDevice(bluetoothDevice)
+                            }
+                        }
                     )
                 }
             )

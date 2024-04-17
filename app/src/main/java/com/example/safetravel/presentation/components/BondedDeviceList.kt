@@ -44,7 +44,7 @@ fun BondedDevicesList(
         item {
             if (bondedDevices.isEmpty()) {
                 Text(
-                    text = stringResource(R.string.lbl_no_paired_devices),
+                    text = stringResource(R.string.lbl_no_newly_paired_devices),
                     style = MaterialTheme.typography.labelLarge
                 )
             }
