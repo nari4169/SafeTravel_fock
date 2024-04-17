@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.util.Log
+import com.example.safetravel.domain.model.DeviceMessage
 import com.example.safetravel.domain.model.SocketType
 import com.example.safetravel.domain.runWithBluetoothPermission
 
@@ -32,6 +33,8 @@ class BluetoothService(
             socketType = socketType,
             listener = this
         ).apply { start() }
+
+        write(DeviceMessage.CONNECTED.tag)
     }
 
     override fun onReadMessage(device: BluetoothDevice, inputBytes: Int, buffer: ByteArray) {

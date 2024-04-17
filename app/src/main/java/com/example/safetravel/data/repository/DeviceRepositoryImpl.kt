@@ -7,7 +7,6 @@ import com.example.safetravel.domain.toDeviceEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.withContext
 
 class DeviceRepositoryImpl(private val deviceDao: DeviceDao) : DeviceRepository {
@@ -20,6 +19,24 @@ class DeviceRepositoryImpl(private val deviceDao: DeviceDao) : DeviceRepository 
     override suspend fun deleteDevice(macAddress: String) {
         withContext(Dispatchers.Default) {
             deviceDao.deleteDevice(macAddress)
+        }
+    }
+
+    override suspend fun updateLockedState(macAddress: String, isLocked: Boolean) {
+        withContext(Dispatchers.Default) {
+            val device = deviceDao.getDevice(macAddress)
+            deviceDao.updateDevice(
+                device.copy(isLocked = isLocked)
+            )
+        }
+    }
+
+    override suspend fun updateUuid(macAddress: String, uuid: String) {
+        withContext(Dispatchers.Default) {
+            val device = deviceDao.getDevice(macAddress)
+            deviceDao.updateDevice(
+                device.copy(uuid = uuid)
+            )
         }
     }
 

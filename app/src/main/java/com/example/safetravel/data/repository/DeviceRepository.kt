@@ -9,6 +9,10 @@ interface DeviceRepository {
 
     suspend fun deleteDevice(macAddress: String)
 
+    suspend fun updateLockedState(macAddress: String, isLocked: Boolean)
+
+    suspend fun updateUuid(macAddress: String, uuid: String)
+
     suspend fun getDevices(): List<Device>
 
     suspend fun getDevice(macAddress: String): Device

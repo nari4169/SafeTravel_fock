@@ -4,7 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.safetravel.data.model.DeviceEntity
+import com.example.safetravel.domain.model.Device
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -14,6 +16,9 @@ interface DeviceDao {
 
     @Query("DELETE FROM devices WHERE macAddress LIKE :macAddress")
     fun deleteDevice(macAddress: String)
+
+    @Update
+    fun updateDevice(deviceEntity: DeviceEntity)
 
     @Query("SELECT * FROM devices")
     fun getDevices(): List<DeviceEntity>

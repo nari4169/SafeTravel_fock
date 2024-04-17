@@ -9,6 +9,7 @@ import com.example.safetravel.data.datasource.BluetoothStatusDataSource
 import com.example.safetravel.data.repository.DeviceRepository
 import com.example.safetravel.data.service.BluetoothServiceHandler
 import com.example.safetravel.domain.model.Device
+import com.example.safetravel.domain.model.DeviceMessage
 import com.example.safetravel.presentation.viewmodel.model.MainUiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,6 +65,17 @@ class MainViewModel(
 
     override fun onReadMessage(macAddress: String, message: String) {
         Log.d(TAG, "onReadMessage(), macAddress: $macAddress, message: $message")
+        if (DeviceMessage.getByTag(message) == DeviceMessage.UUUID) {
+            val lockedState = message.split(MESSAGE_SEPARATOR)[LOCKED_STATE_MESSAGE_INDEX] == TRUE
+            val uuid = message.split(MESSAGE_SEPARATOR)[UUID_MESSAGE_INDEX].replace(
+                oldValue = DeviceMessage.UUUID.tag,
+                newValue = BLANK
+            )
+            viewModelScope.launch {
+                deviceRepository.updateLockedState(macAddress, lockedState)
+                deviceRepository.updateUuid(macAddress, uuid)
+            }
+        }
     }
 
     override fun onWriteMessage(macAddress: String, isSuccessful: Boolean) {
@@ -85,5 +97,10 @@ class MainViewModel(
     companion object {
         private const val TAG = "MainViewModel"
         private const val LOADING_DELAY = 1000L
+        private const val MESSAGE_SEPARATOR = ";"
+        private const val UUID_MESSAGE_INDEX = 0
+        private const val LOCKED_STATE_MESSAGE_INDEX = 1
+        private const val BLANK = ""
+        private const val TRUE = "true"
     }
 }
