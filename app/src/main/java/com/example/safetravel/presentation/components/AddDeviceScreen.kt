@@ -1,5 +1,6 @@
 package com.example.safetravel.presentation.components
 
+import android.bluetooth.BluetoothDevice
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +23,10 @@ import com.example.safetravel.R
 import com.example.safetravel.domain.openBluetoothSettings
 
 @Composable
-fun AddDeviceScreen() {
+fun AddDeviceScreen(
+    bondedDevices: List<BluetoothDevice>,
+    onDeviceClick: (BluetoothDevice) -> Unit
+) {
     val context = LocalContext.current
 
     Column(
@@ -30,7 +34,11 @@ fun AddDeviceScreen() {
         verticalArrangement = Arrangement.spacedBy(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        BondedDevicesList(modifier = Modifier.padding(horizontal = 16.dp))
+        BondedDevicesList(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            bondedDevices = bondedDevices,
+            onDeviceClick = onDeviceClick
+        )
 
         Text(
             text = stringResource(R.string.lbl_add_device_message),

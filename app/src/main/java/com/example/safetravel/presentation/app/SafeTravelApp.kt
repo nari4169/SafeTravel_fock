@@ -1,6 +1,7 @@
 package com.example.safetravel.presentation.app
 
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothDevice
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,6 +34,7 @@ import com.example.safetravel.presentation.viewmodel.model.MainUiState
 @Composable
 fun SafeTravelApp(
     uiState: MainUiState,
+    bondedDevices: List<BluetoothDevice>,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -49,7 +51,12 @@ fun SafeTravelApp(
             ModalBottomSheet(
                 sheetState = modalBottomSheetState,
                 onDismissRequest = { showBottomSheet = false },
-                content = { AddDeviceScreen() }
+                content = {
+                    AddDeviceScreen(
+                        bondedDevices = bondedDevices,
+                        onDeviceClick = { }
+                    )
+                }
             )
         }
 

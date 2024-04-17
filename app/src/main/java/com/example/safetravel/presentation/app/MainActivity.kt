@@ -1,5 +1,9 @@
 package com.example.safetravel.presentation.app
 
+import android.annotation.SuppressLint
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,11 +13,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.example.safetravel.R
 import com.example.safetravel.domain.isBluetoothPermissionGranted
 import com.example.safetravel.domain.model.BluetoothStatus
@@ -28,6 +40,7 @@ class MainActivity : ComponentActivity() {
 
     private val mainViewModel: MainViewModel by viewModel()
 
+    @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -36,6 +49,9 @@ class MainActivity : ComponentActivity() {
                 val snackbarHostState = remember { SnackbarHostState() }
                 val bluetoothOffSnackbar = stringResource(R.string.lbl_bluetooth_off_snackbar)
                 val snackbarAction = stringResource(R.string.lbl_enable)
+                val context = LocalContext.current
+                val lifecycleOwner = LocalLifecycleOwner.current
+                var bondedDevices by remember { mutableStateOf<List<BluetoothDevice>>(emptyList()) }
                 val uiState = mainViewModel.uiState
 
                 LaunchedEffect(uiState.bluetoothStatus) {
@@ -58,10 +74,24 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
+                DisposableEffect(lifecycleOwner) {
+                    val observer = LifecycleEventObserver { _, event ->
+                        if (event == Lifecycle.Event.ON_RESUME) {
+                            val service = context.getSystemService(Context.BLUETOOTH_SERVICE)
+                            val adapter = (service as BluetoothManager).adapter
+                            bondedDevices = adapter.bondedDevices.toList()
+                        }
+                    }
+
+                    lifecycleOwner.lifecycle.addObserver(observer)
+                    onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+                }
+
                 Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) { padding ->
                     when {
                         this.isBluetoothPermissionGranted() -> SafeTravelApp(
                             uiState = mainViewModel.uiState,
+                            bondedDevices = bondedDevices,
                             modifier = Modifier.padding(padding),
                         )
 
