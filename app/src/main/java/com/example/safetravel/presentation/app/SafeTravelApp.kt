@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.example.safetravel.R
 import com.example.safetravel.domain.model.BluetoothStatus
 import com.example.safetravel.presentation.components.AddDeviceScreen
+import com.example.safetravel.presentation.components.EmptyScreen
 import com.example.safetravel.presentation.viewmodel.model.MainUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +48,8 @@ fun SafeTravelApp(
     }
 
     Box(modifier = modifier.fillMaxSize()) {
+        EmptyScreen()
+
         if (showBottomSheet) {
             ModalBottomSheet(
                 sheetState = modalBottomSheetState,
@@ -61,7 +64,9 @@ fun SafeTravelApp(
         }
 
         ExtendedFloatingActionButton(
-            text = { Text(text = stringResource(R.string.lbl_add_device)) },
+            text = {
+                Text(text = stringResource(R.string.lbl_add_device))
+            },
             icon = {
                 Icon(
                     modifier = Modifier.size(56.dp),
