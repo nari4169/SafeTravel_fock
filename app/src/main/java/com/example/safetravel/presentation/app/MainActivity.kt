@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.safetravel.R
 import com.example.safetravel.domain.isBluetoothPermissionGranted
 import com.example.safetravel.domain.model.BluetoothStatus
@@ -52,7 +53,7 @@ class MainActivity : ComponentActivity() {
                 val context = LocalContext.current
                 val lifecycleOwner = LocalLifecycleOwner.current
                 var bondedDevices by remember { mutableStateOf<List<BluetoothDevice>>(emptyList()) }
-                val uiState = mainViewModel.uiState
+                val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
                 LaunchedEffect(uiState.bluetoothStatus) {
                     when (uiState.bluetoothStatus) {
@@ -80,6 +81,7 @@ class MainActivity : ComponentActivity() {
                             val service = context.getSystemService(Context.BLUETOOTH_SERVICE)
                             val adapter = (service as BluetoothManager).adapter
                             bondedDevices = adapter.bondedDevices.toList()
+                            mainViewModel.reconcileDevices(bondedDevices.mapNotNull { it.address })
                         }
                     }
 
@@ -90,7 +92,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) { padding ->
                     when {
                         this.isBluetoothPermissionGranted() -> SafeTravelApp(
-                            uiState = mainViewModel.uiState,
+                            viewModel = mainViewModel,
                             bondedDevices = bondedDevices,
                             modifier = Modifier.padding(padding),
                         )

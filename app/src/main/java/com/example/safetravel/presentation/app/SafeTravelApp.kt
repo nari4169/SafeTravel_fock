@@ -24,17 +24,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.safetravel.R
 import com.example.safetravel.domain.model.BluetoothStatus
 import com.example.safetravel.presentation.components.AddDeviceScreen
+import com.example.safetravel.presentation.components.DevicesScreen
 import com.example.safetravel.presentation.components.EmptyScreen
-import com.example.safetravel.presentation.viewmodel.model.MainUiState
+import com.example.safetravel.presentation.components.LoadingScreen
+import com.example.safetravel.presentation.viewmodel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MissingPermission")
 @Composable
 fun SafeTravelApp(
-    uiState: MainUiState,
+    viewModel: MainViewModel,
     bondedDevices: List<BluetoothDevice>,
     modifier: Modifier = Modifier,
 ) {
@@ -42,13 +45,18 @@ fun SafeTravelApp(
     val bluetoothOffToastMessage = stringResource(R.string.lbl_bluetooth_off_toast)
     val modalBottomSheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     if (showBottomSheet && uiState.bluetoothStatus == BluetoothStatus.OFF) {
         showBottomSheet = false
     }
 
     Box(modifier = modifier.fillMaxSize()) {
-        EmptyScreen()
+        when {
+            uiState.isLoading -> LoadingScreen()
+            uiState.devices.isEmpty() -> EmptyScreen()
+            else -> DevicesScreen(devices = uiState.devices)
+        }
 
         if (showBottomSheet) {
             ModalBottomSheet(
@@ -57,7 +65,7 @@ fun SafeTravelApp(
                 content = {
                     AddDeviceScreen(
                         bondedDevices = bondedDevices,
-                        onDeviceClick = { }
+                        onDeviceClick = viewModel::addDevice
                     )
                 }
             )

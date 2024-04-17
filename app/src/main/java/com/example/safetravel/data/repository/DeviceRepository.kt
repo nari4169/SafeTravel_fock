@@ -5,11 +5,15 @@ import kotlinx.coroutines.flow.Flow
 
 interface DeviceRepository {
 
-    fun addDevice(device: Device)
+    suspend fun addDevice(device: Device)
 
-    fun deleteDevice(macAddress: String)
+    suspend fun deleteDevice(macAddress: String)
 
-    fun getDevice(macAddress: String): Device
+    suspend fun getDevices(): List<Device>
 
-    fun getDevices(): Flow<List<Device>>
+    suspend fun getDevice(macAddress: String): Device
+
+    suspend fun getDevicesAsFlow(): Flow<List<Device>>
+
+    suspend fun reconcileDevices(bondedDevicesAddresses: List<String>)
 }

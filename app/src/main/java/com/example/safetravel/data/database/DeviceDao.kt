@@ -15,9 +15,12 @@ interface DeviceDao {
     @Query("DELETE FROM devices WHERE macAddress LIKE :macAddress")
     fun deleteDevice(macAddress: String)
 
+    @Query("SELECT * FROM devices")
+    fun getDevices(): List<DeviceEntity>
+
     @Query("SELECT * FROM devices WHERE macAddress LIKE :macAddress")
     fun getDevice(macAddress: String): DeviceEntity
 
     @Query("SELECT * FROM devices")
-    fun getDevices(): Flow<List<DeviceEntity>>
+    fun getDevicesAsFlow(): Flow<List<DeviceEntity>>
 }

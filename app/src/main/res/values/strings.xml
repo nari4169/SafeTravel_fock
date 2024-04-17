@@ -25,4 +25,7 @@
     <!--    EMPTY SCREEN    -->
     <string name="lbl_empty_screen_message">Start your safe journey by quickly adding your SafeTravel devices!</string>
 
+    <!--    LOADING SCREEN    -->
+    <string name="lbl_loading">Loading…</string>
+
 </resources>
