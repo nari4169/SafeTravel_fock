@@ -6,6 +6,8 @@ import com.example.safetravel.domain.model.Device
 fun DeviceEntity.toDevice(): Device {
     return Device(
         macAddress = this.macAddress,
-        name = this.name
+        name = this.name,
+        isLocked = this.isLocked,
+        uuid = this.uuid
     )
 }

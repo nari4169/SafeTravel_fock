@@ -48,6 +48,18 @@ class MainViewModel(
         }
     }
 
+    fun deleteDevice(macAddress: String) {
+        viewModelScope.launch {
+            deviceRepository.deleteDevice(macAddress)
+        }
+    }
+
+    fun changeLockedState(macAddress: String) {
+        viewModelScope.launch {
+            deviceRepository.changeLockedState(macAddress)
+        }
+    }
+
     fun reconcileDevices(bondedDevicesAddresses: List<String>) {
         viewModelScope.launch {
             deviceRepository.reconcileDevices(bondedDevicesAddresses)

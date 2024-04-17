@@ -29,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.safetravel.R
 import com.example.safetravel.data.service.BluetoothService
 import com.example.safetravel.domain.model.BluetoothStatus
+import com.example.safetravel.domain.model.DeviceMessage
 import com.example.safetravel.presentation.components.AddDeviceScreen
 import com.example.safetravel.presentation.components.DevicesScreen
 import com.example.safetravel.presentation.components.EmptyScreen
@@ -71,9 +72,11 @@ fun SafeTravelApp(
             uiState.devices.isEmpty() -> EmptyScreen()
             else -> DevicesScreen(
                 devices = uiState.devices,
-                onDeviceClick = { macAddress ->
+                onDeviceDeleteClicked = viewModel::deleteDevice,
+                onDeviceLockStateClicked = { macAddress ->
+                    viewModel.changeLockedState(macAddress)
                     val service = bluetoothServices.first { it.device.address == macAddress }
-                    service.write("onDeviceClick(): $macAddress")
+                    service.write(DeviceMessage.LOCK_STATE_CHANGED.tag)
                 }
             )
         }
