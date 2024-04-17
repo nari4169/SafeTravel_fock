@@ -1,13 +1,13 @@
 package com.example.safetravel.data.service
 
 interface BluetoothServiceHandler {
-    fun onReadMessage(message: String)
+    fun onReadMessage(macAddress: String, message: String)
 
-    fun onWriteMessage(isSuccessful: Boolean)
+    fun onWriteMessage(macAddress: String, isSuccessful: Boolean)
 
-    fun onConnectionSuccess()
+    fun onConnectionSuccess(macAddress: String)
 
-    fun onConnectionFailed()
+    fun onConnectionFailed(macAddress: String)
 
-    fun onConnectionLost()
+    fun onConnectionLost(macAddress: String)
 }

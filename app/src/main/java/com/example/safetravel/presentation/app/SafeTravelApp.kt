@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.safetravel.R
+import com.example.safetravel.data.service.BluetoothService
 import com.example.safetravel.domain.model.BluetoothStatus
 import com.example.safetravel.presentation.components.AddDeviceScreen
 import com.example.safetravel.presentation.components.DevicesScreen
@@ -51,11 +52,27 @@ fun SafeTravelApp(
         showBottomSheet = false
     }
 
+    val bluetoothServices = bondedDevices.filter { bluetoothDevice ->
+        bluetoothDevice.address in uiState.devices.map { it.macAddress }
+    }.map {
+        BluetoothService(
+            device = it,
+            handler = viewModel,
+            context = context
+        )
+    }
+
     Box(modifier = modifier.fillMaxSize()) {
         when {
             uiState.isLoading -> LoadingScreen()
             uiState.devices.isEmpty() -> EmptyScreen()
-            else -> DevicesScreen(devices = uiState.devices)
+            else -> DevicesScreen(
+                devices = uiState.devices,
+                onDeviceClick = { macAddress ->
+                    val service = bluetoothServices.first { it.device.address == macAddress }
+                    service.write("onDeviceClick(): $macAddress")
+                }
+            )
         }
 
         if (showBottomSheet) {

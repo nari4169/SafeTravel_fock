@@ -1,5 +1,6 @@
 package com.example.safetravel.data.service
 
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.util.Log
 import com.example.safetravel.domain.model.SocketType
@@ -10,6 +11,7 @@ import java.io.InputStream
 import java.io.OutputStream
 
 class ConnectedThread(
+    private val device: BluetoothDevice,
     socket: BluetoothSocket,
     private val socketType: SocketType,
     private val listener: ConnectedThreadListener
@@ -26,10 +28,10 @@ class ConnectedThread(
                 runBlocking { delay(DELAY_TIME) }
                 try {
                     val inputBytes = inputStream.read(buffer)
-                    listener.onReadMessage(inputBytes, buffer)
+                    listener.onReadMessage(device, inputBytes, buffer)
                 } catch (readException: IOException) {
                     Log.e(TAG, "Failed to read from socket: $socketType", readException)
-                    listener.onConnectionLost()
+                    listener.onConnectionLost(device)
                     break
                 }
             }
@@ -39,10 +41,10 @@ class ConnectedThread(
     fun write(buffer: ByteArray) {
         try {
             outputStream.write(buffer)
-            listener.onWriteMessage(true)
+            listener.onWriteMessage(device, true)
             Log.i(TAG, "Successful write on Socket: $socketType")
         } catch (writeException: IOException) {
-            listener.onWriteMessage(false)
+            listener.onWriteMessage(device, false)
             Log.e(TAG, "Failed to write to socket: $socketType", writeException)
         }
     }

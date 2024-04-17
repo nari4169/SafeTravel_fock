@@ -1,10 +1,12 @@
 package com.example.safetravel.data.service
 
+import android.bluetooth.BluetoothDevice
+
 interface ConnectedThreadListener {
 
-    fun onReadMessage(inputBytes: Int, buffer: ByteArray)
+    fun onReadMessage(device: BluetoothDevice, inputBytes: Int, buffer: ByteArray)
 
-    fun onWriteMessage(isSuccessful: Boolean)
+    fun onWriteMessage(device: BluetoothDevice, isSuccessful: Boolean)
 
-    fun onConnectionLost()
+    fun onConnectionLost(device: BluetoothDevice)
 }

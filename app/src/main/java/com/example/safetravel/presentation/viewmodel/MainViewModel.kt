@@ -2,6 +2,7 @@ package com.example.safetravel.presentation.viewmodel
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.safetravel.data.datasource.BluetoothStatusDataSource
@@ -32,19 +33,6 @@ class MainViewModel(
                 }
             }
         }
-
-        viewModelScope.launch {
-            delay(LOADING_DELAY)
-
-            deviceRepository.getDevicesAsFlow().collect { devices ->
-                _uiState.update {
-                    it.copy(
-                        devices = devices,
-                        isLoading = false
-                    )
-                }
-            }
-        }
     }
 
     @SuppressLint("MissingPermission")
@@ -62,25 +50,40 @@ class MainViewModel(
     fun reconcileDevices(bondedDevicesAddresses: List<String>) {
         viewModelScope.launch {
             deviceRepository.reconcileDevices(bondedDevicesAddresses)
+            deviceRepository.getDevicesAsFlow().collect { devices ->
+                delay(LOADING_DELAY)
+                _uiState.update {
+                    it.copy(
+                        devices = devices,
+                        isLoading = false
+                    )
+                }
+            }
         }
     }
 
-    override fun onReadMessage(message: String) {
+    override fun onReadMessage(macAddress: String, message: String) {
+        Log.d(TAG, "onReadMessage(), macAddress: $macAddress, message: $message")
     }
 
-    override fun onWriteMessage(isSuccessful: Boolean) {
+    override fun onWriteMessage(macAddress: String, isSuccessful: Boolean) {
+        Log.d(TAG, "onWriteMessage(), macAddress: $macAddress, isSuccessful: $isSuccessful")
     }
 
-    override fun onConnectionSuccess() {
+    override fun onConnectionSuccess(macAddress: String) {
+        Log.d(TAG, "onConnectionSuccess(), macAddress: $macAddress")
     }
 
-    override fun onConnectionFailed() {
+    override fun onConnectionFailed(macAddress: String) {
+        Log.d(TAG, "onConnectionFailed(), macAddress: $macAddress")
     }
 
-    override fun onConnectionLost() {
+    override fun onConnectionLost(macAddress: String) {
+        Log.d(TAG, "onConnectionLost(), macAddress: $macAddress")
     }
 
     companion object {
+        private const val TAG = "MainViewModel"
         private const val LOADING_DELAY = 1000L
     }
 }

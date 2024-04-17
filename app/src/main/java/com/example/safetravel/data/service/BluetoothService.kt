@@ -1,7 +1,5 @@
 package com.example.safetravel.data.service
 
-import android.annotation.SuppressLint
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
@@ -10,19 +8,15 @@ import com.example.safetravel.domain.model.SocketType
 import com.example.safetravel.domain.runWithBluetoothPermission
 
 class BluetoothService(
-    private val adapter: BluetoothAdapter,
+    val device: BluetoothDevice,
     private val handler: BluetoothServiceHandler,
     private val context: Context
 ) : ConnectThreadListener, ConnectedThreadListener {
     private var connectThread: ConnectThread? = null
     private var connectedThread: ConnectedThread? = null
 
-    @SuppressLint("MissingPermission")
-    override fun onSocketCreated() {
-        Log.i(TAG, "Bluetooth adapter discovery canceled")
-        context.runWithBluetoothPermission {
-            adapter.cancelDiscovery()
-        }
+    init {
+        connect(SocketType.SECURE)
     }
 
     override fun onConnected(
@@ -30,33 +24,48 @@ class BluetoothService(
         device: BluetoothDevice,
         socketType: SocketType
     ) {
-        handler.onConnectionSuccess()
+        handler.onConnectionSuccess(macAddress = device.address)
         connectThread = null
-        connectedThread = ConnectedThread(socket, socketType, this).apply { start() }
+        connectedThread = ConnectedThread(
+            device = device,
+            socket = socket,
+            socketType = socketType,
+            listener = this
+        ).apply { start() }
     }
 
-    override fun onReadMessage(inputBytes: Int, buffer: ByteArray) {
-        handler.onReadMessage(String(buffer, NO_OFFSET, inputBytes))
+    override fun onReadMessage(device: BluetoothDevice, inputBytes: Int, buffer: ByteArray) {
+        handler.onReadMessage(
+            macAddress = device.address,
+            message = String(buffer, NO_OFFSET, inputBytes)
+        )
     }
 
-    override fun onWriteMessage(isSuccessful: Boolean) = handler.onWriteMessage(isSuccessful)
+    override fun onWriteMessage(device: BluetoothDevice, isSuccessful: Boolean) {
+        handler.onWriteMessage(device.address, isSuccessful)
+    }
 
-    override fun onConnectionFailed() = handler.onConnectionFailed()
+    override fun onConnectionFailed(device: BluetoothDevice) {
+        handler.onConnectionFailed(device.address)
+    }
 
-    override fun onConnectionLost() = handler.onConnectionLost()
+    override fun onConnectionLost(device: BluetoothDevice) {
+        handler.onConnectionLost(device.address)
+    }
+
 
     override fun runWithBluetoothPermission(block: () -> Unit) {
         context.runWithBluetoothPermission(block)
     }
 
-    fun connect(device: BluetoothDevice, socketType: SocketType) {
+    private fun connect(socketType: SocketType) {
         Log.i(TAG, "Start connecting")
         connectThread = ConnectThread(device, socketType, this).apply { start() }
     }
 
-    fun write(buffer: ByteArray) {
+    fun write(message: String) {
         Log.i(TAG, "Write to bluetooth device")
-        connectedThread?.write(buffer)
+        connectedThread?.write(message.toByteArray())
     }
 
     fun stop() {

@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothSocket
 import android.util.Log
 import com.example.safetravel.domain.model.SocketType
 import java.io.IOException
+import java.lang.Exception
 
 class ConnectThread(
     private val device: BluetoothDevice,
@@ -23,7 +24,6 @@ class ConnectThread(
                     SocketType.INSECURE -> device.createInsecureRfcommSocketToServiceRecord(device.uuids.first().uuid)
                 }
 
-                listener.onSocketCreated()
                 Log.i(TAG, "Socket: $socketType created")
                 setName("ConnectThread $socketType")
 
@@ -32,11 +32,11 @@ class ConnectThread(
                     listener.onConnected(socket, device, socketType)
                     Log.i(TAG, "Socket: $socketType connection successful")
                 } catch (connectException: IOException) {
-                    listener.onConnectionFailed()
+                    listener.onConnectionFailed(device)
                     Log.e(TAG, "Failed to connect socket: $socketType", connectException)
                 }
 
-            } catch (socketException: IOException) {
+            } catch (socketException: Exception) {
                 Log.e(TAG, "Failed to create socket: $socketType", socketException)
             }
         }

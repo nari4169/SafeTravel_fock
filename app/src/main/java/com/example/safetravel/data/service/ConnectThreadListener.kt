@@ -5,11 +5,9 @@ import android.bluetooth.BluetoothSocket
 import com.example.safetravel.domain.model.SocketType
 
 interface ConnectThreadListener {
-    fun onSocketCreated()
-
     fun onConnected(socket: BluetoothSocket, device: BluetoothDevice, socketType: SocketType)
 
-    fun onConnectionFailed()
+    fun onConnectionFailed(device: BluetoothDevice)
 
     fun runWithBluetoothPermission(block: () -> Unit)
 }
