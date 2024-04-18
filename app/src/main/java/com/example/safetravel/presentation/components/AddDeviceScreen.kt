@@ -35,7 +35,6 @@ fun AddDeviceScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         BondedDevicesList(
-            modifier = Modifier.padding(horizontal = 16.dp),
             bondedDevices = bondedDevices,
             onDeviceClick = onDeviceClick
         )

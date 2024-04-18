@@ -2,12 +2,17 @@ package com.example.safetravel.presentation.components
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +25,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.safetravel.R
 
+private const val ITEMS_PER_PAGE = 3
+
+@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("MissingPermission")
 @Composable
 fun BondedDevicesList(
@@ -27,27 +35,45 @@ fun BondedDevicesList(
     onDeviceClick: (BluetoothDevice) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier) {
-        items(bondedDevices) { device ->
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable { onDeviceClick(device) }
-            ) {
-                Text(text = device.name, modifier = Modifier.weight(1f))
-                Icon(painter = painterResource(R.drawable.ic_link), contentDescription = null)
-            }
+    val pages = bondedDevices.chunked(ITEMS_PER_PAGE)
+    val pagerState = rememberPagerState { pages.count() }
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+    Box(modifier = modifier) {
+
+        HorizontalPager(
+            state = pagerState,
+            contentPadding = PaddingValues(end = 24.dp),
+            verticalAlignment = Alignment.Top,
+            modifier = Modifier.animateContentSize()
+        ) { pageIndex ->
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                val currentPage = pages[pageIndex]
+                for (device in currentPage) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .clickable { onDeviceClick(device) }
+                    ) {
+                        Text(text = device.name, modifier = Modifier.weight(1f))
+                        Icon(
+                            painter = painterResource(R.drawable.ic_link),
+                            contentDescription = null
+                        )
+                    }
+
+                    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                }
+            }
         }
 
-        item {
-            if (bondedDevices.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.lbl_no_newly_paired_devices),
-                    style = MaterialTheme.typography.labelLarge
-                )
-            }
+        if (bondedDevices.isEmpty()) {
+            Text(
+                text = stringResource(R.string.lbl_no_newly_paired_devices),
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
 }
