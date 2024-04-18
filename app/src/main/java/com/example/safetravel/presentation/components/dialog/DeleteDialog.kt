@@ -1,4 +1,4 @@
-package com.example.safetravel.presentation.components
+package com.example.safetravel.presentation.components.dialog
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text

@@ -34,7 +34,7 @@ fun AddDeviceScreen(
         verticalArrangement = Arrangement.spacedBy(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        BondedDevicesList(
+        BondedDevices(
             bondedDevices = bondedDevices,
             onDeviceClick = onDeviceClick
         )

@@ -1,4 +1,4 @@
-package com.example.safetravel.presentation.components
+package com.example.safetravel.presentation.components.permission
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.safetravel.domain.model.DetailedPermission
 import com.example.safetravel.domain.openAppSettings
-import com.example.safetravel.presentation.components.PermissionDialog
+import com.example.safetravel.presentation.components.permission.PermissionDialog
 import com.example.safetravel.presentation.theme.SafeTravelTheme
 import com.example.safetravel.presentation.viewmodel.PermissionsViewModel
 import org.koin.androidx.compose.koinViewModel

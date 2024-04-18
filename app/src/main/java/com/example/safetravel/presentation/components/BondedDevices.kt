@@ -30,7 +30,7 @@ private const val ITEMS_PER_PAGE = 3
 @OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("MissingPermission")
 @Composable
-fun BondedDevicesList(
+fun BondedDevices(
     bondedDevices: List<BluetoothDevice>,
     onDeviceClick: (BluetoothDevice) -> Unit,
     modifier: Modifier = Modifier

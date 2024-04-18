@@ -31,7 +31,7 @@ import com.example.safetravel.R
 import com.example.safetravel.domain.isBluetoothPermissionGranted
 import com.example.safetravel.domain.model.BluetoothStatus
 import com.example.safetravel.domain.openBluetoothSettings
-import com.example.safetravel.presentation.components.PermissionNotGrantedScreen
+import com.example.safetravel.presentation.components.permission.PermissionNotGrantedScreen
 import com.example.safetravel.presentation.theme.SafeTravelTheme
 import com.example.safetravel.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
