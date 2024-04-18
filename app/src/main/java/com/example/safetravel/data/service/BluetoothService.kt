@@ -1,6 +1,8 @@
 package com.example.safetravel.data.service
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.util.Log
@@ -22,16 +24,19 @@ class BluetoothService(
         connect(SocketType.SECURE)
     }
 
-    override fun onConnected(
-        socket: BluetoothSocket,
-        device: BluetoothDevice,
-        socketType: SocketType
-    ) {
+    @SuppressLint("MissingPermission")
+    override fun onSocketCreated(socketType: SocketType) {
+        Log.i(TAG, "Socket: $socketType created for device: ${device.address}")
+        val service = context.getSystemService(Context.BLUETOOTH_SERVICE)
+        val adapter = (service as BluetoothManager).adapter
+        context.runWithBluetoothPermission { adapter.cancelDiscovery() }
+    }
+
+    override fun onConnected(socket: BluetoothSocket, socketType: SocketType) {
         Log.i(TAG, "Connected to device: ${device.address}")
         handler.onConnectionSuccess(macAddress = device.address)
         connectThread = null
         connectedThread = ConnectedThread(
-            device = device,
             socket = socket,
             socketType = socketType,
             listener = this
@@ -40,7 +45,7 @@ class BluetoothService(
         write(DeviceMessage.CONNECTED.tag)
     }
 
-    override fun onReadMessage(device: BluetoothDevice, inputBytes: Int, buffer: ByteArray) {
+    override fun onReadMessage(inputBytes: Int, buffer: ByteArray) {
         val message = String(buffer, NO_OFFSET, inputBytes)
         Log.i(TAG, "Read message from device: ${device.address}, message: $message")
         handler.onReadMessage(
@@ -49,17 +54,17 @@ class BluetoothService(
         )
     }
 
-    override fun onWriteMessage(device: BluetoothDevice, isSuccessful: Boolean) {
+    override fun onWriteMessage(isSuccessful: Boolean) {
         Log.i(TAG, "Write message to device: ${device.address}, successful: $isSuccessful")
         handler.onWriteMessage(device.address, isSuccessful)
     }
 
-    override fun onConnectionFailed(device: BluetoothDevice) {
+    override fun onConnectionFailed() {
         Log.i(TAG, "Connection failed for device: ${device.address}")
         handler.onConnectionFailed(device.address)
     }
 
-    override fun onConnectionLost(device: BluetoothDevice) {
+    override fun onConnectionLost() {
         Log.i(TAG, "Connection lost for device: ${device.address}")
         handler.onConnectionLost(device.address)
     }

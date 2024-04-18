@@ -27,13 +27,14 @@ class ConnectThread(
 
                 Log.i(TAG, "Socket: $socketType created")
                 setName("ConnectThread $socketType")
+                listener.onSocketCreated(socketType)
 
                 try {
                     socket.connect()
-                    listener.onConnected(socket, device, socketType)
+                    listener.onConnected(socket, socketType)
                     Log.i(TAG, "Socket: $socketType connection successful")
                 } catch (connectException: IOException) {
-                    listener.onConnectionFailed(device)
+                    listener.onConnectionFailed()
                     Log.e(TAG, "Failed to connect socket: $socketType", connectException)
                 }
 

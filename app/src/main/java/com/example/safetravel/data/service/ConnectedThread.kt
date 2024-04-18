@@ -11,7 +11,6 @@ import java.io.InputStream
 import java.io.OutputStream
 
 class ConnectedThread(
-    private val device: BluetoothDevice,
     socket: BluetoothSocket,
     private val socketType: SocketType,
     private val listener: ConnectedThreadListener
@@ -28,10 +27,10 @@ class ConnectedThread(
                 runBlocking { delay(DELAY_TIME) }
                 try {
                     val inputBytes = inputStream.read(buffer)
-                    listener.onReadMessage(device, inputBytes, buffer)
+                    listener.onReadMessage(inputBytes, buffer)
                 } catch (readException: IOException) {
                     Log.e(TAG, "Failed to read from socket: $socketType", readException)
-                    listener.onConnectionLost(device)
+                    listener.onConnectionLost()
                     break
                 }
             }
@@ -41,10 +40,10 @@ class ConnectedThread(
     fun write(buffer: ByteArray) {
         try {
             outputStream.write(buffer)
-            listener.onWriteMessage(device, true)
+            listener.onWriteMessage(true)
             Log.i(TAG, "Successful write on Socket: $socketType")
         } catch (writeException: IOException) {
-            listener.onWriteMessage(device, false)
+            listener.onWriteMessage(false)
             Log.e(TAG, "Failed to write to socket: $socketType", writeException)
         }
     }
