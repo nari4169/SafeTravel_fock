@@ -22,6 +22,13 @@ class DeviceRepositoryImpl(private val deviceDao: DeviceDao) : DeviceRepository 
         }
     }
 
+    override suspend fun renameDevice(macAddress: String, newName: String) {
+        withContext(Dispatchers.Default) {
+            val device = deviceDao.getDevice(macAddress)
+            deviceDao.updateDevice(device.copy(name = newName))
+        }
+    }
+
     override suspend fun markDeviceAsVerified(macAddress: String) {
         withContext(Dispatchers.Default) {
             val device = deviceDao.getDevice(macAddress)

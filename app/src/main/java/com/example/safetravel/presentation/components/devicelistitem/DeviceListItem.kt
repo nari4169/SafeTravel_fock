@@ -24,6 +24,7 @@ import com.example.safetravel.R
 import com.example.safetravel.domain.model.Device
 import com.example.safetravel.presentation.components.CustomizationScreen
 import com.example.safetravel.presentation.components.dialog.DeleteDialog
+import com.example.safetravel.presentation.components.dialog.RenameDialog
 import com.example.safetravel.presentation.components.dialog.VerificationDialog
 import com.example.safetravel.presentation.model.DeviceType
 import kotlinx.coroutines.launch
@@ -35,6 +36,7 @@ fun DeviceListItem(
     onLockStateChanged: () -> Unit,
     onDelete: () -> Unit,
     onVerified: () -> Unit,
+    onRename: (String) -> Unit,
     onTypeChanged: (DeviceType) -> Unit,
     onRetryConnection: () -> Unit
 ) {
@@ -42,6 +44,7 @@ fun DeviceListItem(
     val coroutineScope = rememberCoroutineScope()
     var showVerifyDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showRenameDialog by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
     val modalBottomSheetState = rememberModalBottomSheetState()
     val verificationToastMessage = stringResource(R.string.lbl_verification_successful)
@@ -53,6 +56,7 @@ fun DeviceListItem(
                 onLockStateClicked = onLockStateChanged,
                 onCustomizeClick = { showBottomSheet = true },
                 onDeleteClick = { showDeleteDialog = true },
+                onRenameClick = { showRenameDialog = true },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
@@ -111,6 +115,17 @@ fun DeviceListItem(
                         }
                     }
                 )
+            }
+        )
+    }
+
+    if (showRenameDialog) {
+        RenameDialog(
+            deviceName = device.name,
+            onDismiss = { showRenameDialog = false },
+            onRename = {
+                showRenameDialog = false
+                onRename(it)
             }
         )
     }

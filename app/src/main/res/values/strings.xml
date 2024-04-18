@@ -47,4 +47,8 @@
     <string name="lbl_delete_dialog_message">You are about to delete %s. Are you sure?</string>
     <string name="lbl_delete">Delete</string>
 
+    <!--    RENAME DIALOG    -->
+    <string name="lbl_rename_dialog_title">Rename device</string>
+    <string name="lbl_rename">Rename</string>
+
 </resources>

@@ -18,6 +18,7 @@ fun DeviceActionsRow(
     onLockStateClicked: () -> Unit,
     onCustomizeClick: () -> Unit,
     onDeleteClick: () -> Unit,
+    onRenameClick: () -> Unit,
 ) {
     val lockedStateDrawable = if (isLocked) R.drawable.ic_locked else R.drawable.ic_unlocked
 
@@ -41,6 +42,17 @@ fun DeviceActionsRow(
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_customize),
+                contentDescription = null,
+            )
+        }
+
+        FilledTonalIconButton(
+            onClick = onRenameClick,
+            enabled = actionsEnabled,
+            shape = MaterialTheme.shapes.small
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_rename),
                 contentDescription = null,
             )
         }

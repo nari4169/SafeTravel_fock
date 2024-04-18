@@ -34,6 +34,7 @@ fun DevicesScreen(
     onDeviceLockedStateChanged: (String) -> Unit,
     onDeleteDevice: (String) -> Unit,
     onDeviceVerified: (String) -> Unit,
+    onRenameDevice: (String, String) -> Unit,
     onDeviceTypeChanged: (String, DeviceType) -> Unit
 ) {
     val context = LocalContext.current
@@ -92,6 +93,9 @@ fun DevicesScreen(
                 },
                 onVerified = {
                     onDeviceVerified(device.macAddress)
+                },
+                onRename = {
+                    onRenameDevice(device.macAddress, it)
                 },
                 onTypeChanged = {
                     onDeviceTypeChanged(device.macAddress, it)

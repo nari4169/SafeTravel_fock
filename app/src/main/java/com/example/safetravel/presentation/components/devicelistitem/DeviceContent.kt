@@ -21,6 +21,7 @@ fun DeviceContent(
     onLockStateClicked: () -> Unit,
     onCustomizeClick: () -> Unit,
     onDeleteClick: () -> Unit,
+    onRenameClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -53,8 +54,9 @@ fun DeviceContent(
                 isLocked = device.isLocked,
                 actionsEnabled = device.isConnected && device.isVerified,
                 onLockStateClicked = onLockStateClicked,
+                onCustomizeClick = onCustomizeClick,
                 onDeleteClick = onDeleteClick,
-                onCustomizeClick = onCustomizeClick
+                onRenameClick = onRenameClick
             )
         }
     }

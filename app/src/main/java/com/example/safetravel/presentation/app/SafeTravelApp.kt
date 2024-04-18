@@ -65,6 +65,7 @@ fun SafeTravelApp(
                 onDeviceLockedStateChanged = viewModel::changeLockedState,
                 onDeleteDevice = viewModel::deleteDevice,
                 onDeviceVerified = viewModel::markDeviceAsVerified,
+                onRenameDevice = viewModel::renameDevice,
                 onDeviceTypeChanged = viewModel::changeDeviceType
             )
         }

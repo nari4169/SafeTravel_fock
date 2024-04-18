@@ -70,6 +70,21 @@ class MainViewModel(
         }
     }
 
+    fun renameDevice(macAddress: String, newName: String) {
+        viewModelScope.launch {
+            val updatedDevices = _uiState.value.devices.map { device ->
+                if (device.macAddress == macAddress) {
+                    device.copy(name = newName)
+                } else {
+                    device
+                }
+            }
+
+            _uiState.update { it.copy(devices = updatedDevices) }
+            deviceRepository.renameDevice(macAddress, newName)
+        }
+    }
+
     fun changeLockedState(macAddress: String) {
         viewModelScope.launch {
             val updatedDevices = _uiState.value.devices.map { device ->
