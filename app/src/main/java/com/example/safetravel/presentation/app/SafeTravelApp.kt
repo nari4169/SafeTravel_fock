@@ -59,8 +59,13 @@ fun SafeTravelApp(
             uiState.isLoading -> LoadingScreen()
             uiState.devices.isEmpty() -> EmptyScreen()
             else -> DevicesScreen(
-                viewModel = viewModel,
+                devices = uiState.devices,
+                handler = viewModel,
                 bondedDevices = bondedDevices,
+                onDeviceLockedStateChanged = viewModel::changeLockedState,
+                onDeleteDevice = viewModel::deleteDevice,
+                onDeviceVerified = viewModel::markDeviceAsVerified,
+                onDeviceTypeChanged = viewModel::changeDeviceType
             )
         }
 

@@ -19,24 +19,29 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.safetravel.data.service.BluetoothService
+import com.example.safetravel.data.service.BluetoothServiceHandler
+import com.example.safetravel.domain.model.Device
 import com.example.safetravel.domain.model.DeviceMessage
 import com.example.safetravel.presentation.components.devicelistitem.DeviceListItem
-import com.example.safetravel.presentation.viewmodel.MainViewModel
+import com.example.safetravel.presentation.model.DeviceType
 
 @Composable
 fun DevicesScreen(
-    viewModel: MainViewModel,
+    devices: List<Device>,
+    handler: BluetoothServiceHandler,
     bondedDevices: List<BluetoothDevice>,
+    onDeviceLockedStateChanged: (String) -> Unit,
+    onDeleteDevice: (String) -> Unit,
+    onDeviceVerified: (String) -> Unit,
+    onDeviceTypeChanged: (String, DeviceType) -> Unit
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var bluetoothServices by remember { mutableStateOf<List<BluetoothService>>(emptyList()) }
 
-    LaunchedEffect(uiState.devices.size) {
-        val devicesAddresses = uiState.devices.map { it.macAddress }
+    LaunchedEffect(devices.size) {
+        val devicesAddresses = devices.map { it.macAddress }
         val servicesDeviceAddresses = bluetoothServices.map { it.device.address }
         val newDevices = bondedDevices.filter {
             it.address in devicesAddresses
@@ -44,12 +49,8 @@ fun DevicesScreen(
             it.address !in servicesDeviceAddresses
         }
 
-        val newServices = newDevices.map {
-            BluetoothService(
-                device = it,
-                handler = viewModel,
-                context = context
-            )
+        val newServices = newDevices.map { device ->
+            BluetoothService(device, handler, context)
         }
 
         bluetoothServices = bluetoothServices.toMutableList().apply { addAll(newServices) }
@@ -71,16 +72,16 @@ fun DevicesScreen(
         contentPadding = PaddingValues(16.dp),
         modifier = Modifier.animateContentSize()
     ) {
-        items(uiState.devices, { it.macAddress }) { device ->
+        items(devices, { it.macAddress }) { device ->
             DeviceListItem(
                 device = device,
-                onLockStateClicked = {
-                    viewModel.changeLockedState(device.macAddress)
+                onLockStateChanged = {
+                    onDeviceLockedStateChanged(device.macAddress)
                     val service = bluetoothServices.first { it.device.address == device.macAddress }
                     service.write(DeviceMessage.LOCK_STATE_CHANGED.tag)
                 },
-                onDeleteDevice = {
-                    viewModel.deleteDevice(device.macAddress)
+                onDelete = {
+                    onDeleteDevice(device.macAddress)
                     bluetoothServices.firstOrNull {
                         it.device.address == device.macAddress
                     }?.apply { stop() }
@@ -89,13 +90,13 @@ fun DevicesScreen(
                         it.device.address == device.macAddress
                     }
                 },
-                onDeviceVerified = {
-                    viewModel.markDeviceAsVerified(device.macAddress)
+                onVerified = {
+                    onDeviceVerified(device.macAddress)
                 },
-                onDeviceTypeChanged = {
-                    viewModel.changeDeviceType(device.macAddress, it)
+                onTypeChanged = {
+                    onDeviceTypeChanged(device.macAddress, it)
                 },
-                onRetryConnectionClick = {
+                onRetryConnection = {
                     val service = bluetoothServices.first { it.device.address == device.macAddress }
                     service.retryConnection()
                 }

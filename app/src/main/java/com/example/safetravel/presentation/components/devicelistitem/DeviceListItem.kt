@@ -32,11 +32,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun DeviceListItem(
     device: Device,
-    onLockStateClicked: () -> Unit,
-    onDeleteDevice: () -> Unit,
-    onDeviceVerified: () -> Unit,
-    onDeviceTypeChanged: (DeviceType) -> Unit,
-    onRetryConnectionClick: () -> Unit
+    onLockStateChanged: () -> Unit,
+    onDelete: () -> Unit,
+    onVerified: () -> Unit,
+    onTypeChanged: (DeviceType) -> Unit,
+    onRetryConnection: () -> Unit
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -50,7 +50,7 @@ fun DeviceListItem(
         Box {
             DeviceContent(
                 device = device,
-                onLockStateClicked = onLockStateClicked,
+                onLockStateClicked = onLockStateChanged,
                 onCustomizeClick = { showBottomSheet = true },
                 onDeleteClick = { showDeleteDialog = true },
                 modifier = Modifier
@@ -64,7 +64,7 @@ fun DeviceListItem(
                     isConnectionLoading = device.isConnectionLoading,
                     onDeleteClick = { showDeleteDialog = true },
                     onVerifyClick = { showVerifyDialog = true },
-                    onRetryConnectionClick = onRetryConnectionClick,
+                    onRetryConnectionClick = onRetryConnection,
                     modifier = Modifier
                         .matchParentSize()
                         .align(Alignment.Center)
@@ -79,7 +79,7 @@ fun DeviceListItem(
             onDismiss = { showVerifyDialog = false },
             onVerificationSuccessful = {
                 showVerifyDialog = false
-                onDeviceVerified()
+                onVerified()
                 Toast.makeText(context, verificationToastMessage, Toast.LENGTH_SHORT).show()
             }
         )
@@ -92,7 +92,7 @@ fun DeviceListItem(
             onDismiss = { showDeleteDialog = false },
             onConfirm = {
                 showDeleteDialog = false
-                onDeleteDevice()
+                onDelete()
             },
         )
     }
@@ -107,7 +107,7 @@ fun DeviceListItem(
                         val job = coroutineScope.launch { modalBottomSheetState.hide() }
                         job.invokeOnCompletion {
                             showBottomSheet = false
-                            onDeviceTypeChanged(deviceType)
+                            onTypeChanged(deviceType)
                         }
                     }
                 )
