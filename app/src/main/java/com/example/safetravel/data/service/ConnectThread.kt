@@ -6,7 +6,7 @@ import android.bluetooth.BluetoothSocket
 import android.util.Log
 import com.example.safetravel.domain.model.SocketType
 import java.io.IOException
-import java.lang.Exception
+import java.util.UUID
 
 class ConnectThread(
     private val device: BluetoothDevice,
@@ -19,9 +19,10 @@ class ConnectThread(
     override fun run() {
         listener.runWithBluetoothPermission {
             try {
+                val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
                 socket = when (socketType) {
-                    SocketType.SECURE -> device.createRfcommSocketToServiceRecord(device.uuids.first().uuid)
-                    SocketType.INSECURE -> device.createInsecureRfcommSocketToServiceRecord(device.uuids.first().uuid)
+                    SocketType.SECURE -> device.createRfcommSocketToServiceRecord(uuid)
+                    SocketType.INSECURE -> device.createInsecureRfcommSocketToServiceRecord(uuid)
                 }
 
                 Log.i(TAG, "Socket: $socketType created")

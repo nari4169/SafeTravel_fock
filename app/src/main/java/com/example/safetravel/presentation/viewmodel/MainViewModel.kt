@@ -65,11 +65,28 @@ class MainViewModel(
             deviceRepository.reconcileDevices(bondedDevicesAddresses)
             deviceRepository.getDevicesAsFlow().collect { devices ->
                 delay(LOADING_DELAY)
-                _uiState.update {
-                    it.copy(
-                        devices = devices,
-                        isLoading = false
-                    )
+                if (_uiState.value.devices.isEmpty()){
+                    _uiState.update {
+                        it.copy(
+                            devices = devices,
+                            isLoading = false
+                        )
+                    }
+                } else {
+                    val devicesWithConnectivity = devices.mapNotNull { device ->
+                        val isConnected = _uiState.value.devices.firstOrNull {
+                            it.macAddress == device.macAddress
+                        }?.isConnected ?: return@mapNotNull null
+
+                        device.copy(isConnected = isConnected)
+                    }
+
+                    _uiState.update {
+                        it.copy(
+                            devices = devicesWithConnectivity,
+                            isLoading = false
+                        )
+                    }
                 }
             }
         }
@@ -96,14 +113,41 @@ class MainViewModel(
 
     override fun onConnectionSuccess(macAddress: String) {
         Log.d(TAG, "onConnectionSuccess(), macAddress: $macAddress")
+        val devices = _uiState.value.devices.map { device ->
+            if (device.macAddress == macAddress) {
+                device.copy(isConnected = true)
+            } else {
+                device
+            }
+        }
+
+        _uiState.update { it.copy(devices = devices) }
     }
 
     override fun onConnectionFailed(macAddress: String) {
         Log.d(TAG, "onConnectionFailed(), macAddress: $macAddress")
+        val devices = _uiState.value.devices.map { device ->
+            if (device.macAddress == macAddress) {
+                device.copy(isConnected = false)
+            } else {
+                device
+            }
+        }
+
+        _uiState.update { it.copy(devices = devices) }
     }
 
     override fun onConnectionLost(macAddress: String) {
         Log.d(TAG, "onConnectionLost(), macAddress: $macAddress")
+        val devices = _uiState.value.devices.map { device ->
+            if (device.macAddress == macAddress) {
+                device.copy(isConnected = false)
+            } else {
+                device
+            }
+        }
+
+        _uiState.update { it.copy(devices = devices) }
     }
 
     companion object {

@@ -17,6 +17,7 @@ class BluetoothService(
     private var connectedThread: ConnectedThread? = null
 
     init {
+        Log.i(TAG, "Start connection to device: ${device.address}")
         connect(SocketType.SECURE)
     }
 
@@ -25,6 +26,7 @@ class BluetoothService(
         device: BluetoothDevice,
         socketType: SocketType
     ) {
+        Log.i(TAG, "Connected to device: ${device.address}")
         handler.onConnectionSuccess(macAddress = device.address)
         connectThread = null
         connectedThread = ConnectedThread(
@@ -38,21 +40,26 @@ class BluetoothService(
     }
 
     override fun onReadMessage(device: BluetoothDevice, inputBytes: Int, buffer: ByteArray) {
+        val message = String(buffer, NO_OFFSET, inputBytes)
+        Log.i(TAG, "Read message from device: ${device.address}, message: $message")
         handler.onReadMessage(
             macAddress = device.address,
-            message = String(buffer, NO_OFFSET, inputBytes)
+            message = message
         )
     }
 
     override fun onWriteMessage(device: BluetoothDevice, isSuccessful: Boolean) {
+        Log.i(TAG, "Write message to device: ${device.address}, successful: $isSuccessful")
         handler.onWriteMessage(device.address, isSuccessful)
     }
 
     override fun onConnectionFailed(device: BluetoothDevice) {
+        Log.i(TAG, "Connection failed for device: ${device.address}")
         handler.onConnectionFailed(device.address)
     }
 
     override fun onConnectionLost(device: BluetoothDevice) {
+        Log.i(TAG, "Connection lost for device: ${device.address}")
         handler.onConnectionLost(device.address)
     }
 
@@ -62,16 +69,22 @@ class BluetoothService(
     }
 
     private fun connect(socketType: SocketType) {
-        Log.i(TAG, "Start connecting")
+        Log.i(TAG, "Start connecting to device: ${device.address}")
         connectThread = ConnectThread(device, socketType, this).apply { start() }
     }
 
+    fun retryConnection() {
+        Log.i(TAG, "Retry connection for device: ${device.address}")
+        connect(SocketType.SECURE)
+    }
+
     fun write(message: String) {
-        Log.i(TAG, "Write to bluetooth device")
+        Log.i(TAG, "Write to bluetooth device: ${device.address}")
         connectedThread?.write(message.toByteArray())
     }
 
     fun stop() {
+        Log.i(TAG, "Stop all processes for device: ${device.address}")
         connectThread?.let {
             it.closeSocket()
             connectThread = null

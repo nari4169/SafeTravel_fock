@@ -15,6 +15,10 @@
     <string name="lbl_bluetooth_off_toast">Turn bluetooth on to use this function</string>
     <string name="lbl_bluetooth_off_snackbar">Bluetooth is off</string>
     <string name="lbl_enable">Enable</string>
+    <string name="lbl_device_not_connected_message">This device is not connected</string>
+    <string name="lbl_retry_connection">Retry connection</string>
+    <string name="lbl_device_not_verified_message">This device is not verified</string>
+    <string name="lbl_verify">Verify</string>
 
     <!--    ADD DEVICE SCREEN    -->
     <string name="lbl_add_device">Add device</string>
