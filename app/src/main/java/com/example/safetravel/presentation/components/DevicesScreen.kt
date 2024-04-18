@@ -7,12 +7,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,7 +31,9 @@ import com.example.safetravel.data.service.BluetoothService
 import com.example.safetravel.domain.model.Device
 import com.example.safetravel.domain.model.DeviceMessage
 import com.example.safetravel.presentation.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DevicesScreen(
     viewModel: MainViewModel,
@@ -35,13 +41,17 @@ fun DevicesScreen(
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val coroutineScope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var bluetoothServices by remember { mutableStateOf<List<BluetoothService>>(emptyList()) }
     var showVerifyDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var deviceForVerification by remember { mutableStateOf<Device?>(null) }
     var deviceForDeletion by remember { mutableStateOf<Device?>(null) }
+    var deviceForCustomization by remember { mutableStateOf<Device?>(null) }
     val verificationToastMessage = stringResource(R.string.lbl_verification_successful)
+    val modalBottomSheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(uiState.devices.size) {
         val devicesAddresses = uiState.devices.map { it.macAddress }
@@ -90,6 +100,10 @@ fun DevicesScreen(
                     deviceForVerification = device
                     showVerifyDialog = true
                 },
+                onCustomizeClick = {
+                    deviceForCustomization = device
+                    showBottomSheet = true
+                },
                 onLockStateClicked = {
                     viewModel.changeLockedState(device.macAddress)
                     val service = bluetoothServices.first { it.device.address == device.macAddress }
@@ -98,7 +112,7 @@ fun DevicesScreen(
                 onRetryConnectionClick = {
                     val service = bluetoothServices.first { it.device.address == device.macAddress }
                     service.retryConnection()
-                }
+                },
             )
         }
     }
@@ -145,5 +159,29 @@ fun DevicesScreen(
                 },
             )
         }
+    }
+
+    if (showBottomSheet) {
+        ModalBottomSheet(
+            sheetState = modalBottomSheetState,
+            onDismissRequest = {
+                showBottomSheet = false
+                deviceForCustomization = null
+            },
+            content = {
+                CustomizationScreen(
+                    onDeviceTypeClick = { deviceType ->
+                        deviceForCustomization?.let { device ->
+                            val job = coroutineScope.launch { modalBottomSheetState.hide() }
+                            job.invokeOnCompletion {
+                                showBottomSheet = false
+                                deviceForCustomization = null
+                                viewModel.changeDeviceType(device.macAddress, deviceType)
+                            }
+                        }
+                    }
+                )
+            }
+        )
     }
 }

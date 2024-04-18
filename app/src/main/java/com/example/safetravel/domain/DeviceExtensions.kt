@@ -9,6 +9,7 @@ fun Device.toDeviceEntity(): DeviceEntity {
         name = this.name,
         isLocked = this.isLocked,
         uuid = this.uuid,
-        isVerified = this.isVerified
+        isVerified = this.isVerified,
+        typeId = this.type.id
     )
 }

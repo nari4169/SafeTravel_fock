@@ -13,6 +13,8 @@ interface DeviceRepository {
 
     suspend fun changeLockedState(macAddress: String)
 
+    suspend fun changeDeviceType(macAddress: String, typeId: Int)
+
     suspend fun updateLockedState(macAddress: String, isLocked: Boolean)
 
     suspend fun updateUuid(macAddress: String, uuid: String)

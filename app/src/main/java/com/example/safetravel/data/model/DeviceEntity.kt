@@ -11,4 +11,5 @@ data class DeviceEntity(
     @ColumnInfo(name = "isLocked") val isLocked: Boolean,
     @ColumnInfo(name = "uuid") val uuid: String?,
     @ColumnInfo(name = "isVerified") val isVerified: Boolean,
+    @ColumnInfo(name = "typeId") val typeId: Int,
 )

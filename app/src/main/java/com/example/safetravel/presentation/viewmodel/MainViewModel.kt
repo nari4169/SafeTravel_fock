@@ -10,6 +10,7 @@ import com.example.safetravel.data.repository.DeviceRepository
 import com.example.safetravel.data.service.BluetoothServiceHandler
 import com.example.safetravel.domain.model.Device
 import com.example.safetravel.domain.model.DeviceMessage
+import com.example.safetravel.presentation.model.DeviceType
 import com.example.safetravel.presentation.viewmodel.model.MainUiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -81,6 +82,21 @@ class MainViewModel(
 
             _uiState.update { it.copy(devices = updatedDevices) }
             deviceRepository.changeLockedState(macAddress)
+        }
+    }
+
+    fun changeDeviceType(macAddress: String, type: DeviceType) {
+        viewModelScope.launch {
+            val updatedDevices = _uiState.value.devices.map { device ->
+                if (device.macAddress == macAddress) {
+                    device.copy(type = type)
+                } else {
+                    device
+                }
+            }
+
+            _uiState.update { it.copy(devices = updatedDevices) }
+            deviceRepository.changeDeviceType(macAddress, type.id)
         }
     }
 

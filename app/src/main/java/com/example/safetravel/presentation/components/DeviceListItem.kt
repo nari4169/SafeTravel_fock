@@ -32,6 +32,7 @@ fun DeviceListItem(
     onLockStateClicked: () -> Unit,
     onDeleteClick: () -> Unit,
     onVerifyClick: () -> Unit,
+    onCustomizeClick: () -> Unit,
     onRetryConnectionClick: () -> Unit,
 ) {
     val isEnabled = device.isConnected && device.isVerified
@@ -48,7 +49,7 @@ fun DeviceListItem(
             ) {
                 Icon(
                     modifier = Modifier.size(80.dp),
-                    painter = painterResource(R.drawable.ic_bag_1),
+                    painter = painterResource(device.type.drawableRes),
                     contentDescription = null
                 )
 
@@ -87,6 +88,17 @@ fun DeviceListItem(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_delete),
+                                contentDescription = null,
+                            )
+                        }
+
+                        FilledTonalIconButton(
+                            onClick = onCustomizeClick,
+                            enabled = isEnabled,
+                            shape = MaterialTheme.shapes.small
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_customize),
                                 contentDescription = null,
                             )
                         }
