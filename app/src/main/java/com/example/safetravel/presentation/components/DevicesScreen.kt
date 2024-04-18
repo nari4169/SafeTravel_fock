@@ -1,6 +1,8 @@
 package com.example.safetravel.presentation.components
 
 import android.bluetooth.BluetoothDevice
+import android.widget.Toast
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,12 +14,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.safetravel.R
 import com.example.safetravel.data.service.BluetoothService
 import com.example.safetravel.domain.model.Device
 import com.example.safetravel.domain.model.DeviceMessage
@@ -33,7 +38,10 @@ fun DevicesScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var bluetoothServices by remember { mutableStateOf<List<BluetoothService>>(emptyList()) }
     var showVerifyDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
     var deviceForVerification by remember { mutableStateOf<Device?>(null) }
+    var deviceForDeletion by remember { mutableStateOf<Device?>(null) }
+    val verificationToastMessage = stringResource(R.string.lbl_verification_successful)
 
     LaunchedEffect(uiState.devices.size) {
         val devicesAddresses = uiState.devices.map { it.macAddress }
@@ -69,20 +77,14 @@ fun DevicesScreen(
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(16.dp),
+        modifier = Modifier.animateContentSize()
     ) {
         items(uiState.devices, { it.macAddress }) { device ->
             DeviceListItem(
                 device = device,
                 onDeleteClick = {
-                    bluetoothServices.firstOrNull {
-                        it.device.address == device.macAddress
-                    }?.apply { stop() }
-
-                    bluetoothServices.toMutableList().removeIf {
-                        it.device.address == device.macAddress
-                    }
-
-                    viewModel.deleteDevice(device.macAddress)
+                    deviceForDeletion = device
+                    showDeleteDialog = true
                 },
                 onVerifyClick = {
                     deviceForVerification = device
@@ -110,8 +112,37 @@ fun DevicesScreen(
                     deviceForVerification = null
                 },
                 onVerificationSuccessful = {
+                    showVerifyDialog = false
+                    deviceForVerification = null
                     viewModel.markDeviceAsVerified(it.macAddress)
+                    Toast.makeText(context, verificationToastMessage, Toast.LENGTH_SHORT).show()
                 }
+            )
+        }
+    }
+
+
+    if (showDeleteDialog) {
+        deviceForDeletion?.let { device ->
+            DeleteDialog(
+                deviceName = device.name,
+                onConfirm = {
+                    showDeleteDialog = false
+                    deviceForDeletion = null
+                    bluetoothServices.firstOrNull {
+                        it.device.address == device.macAddress
+                    }?.apply { stop() }
+
+                    bluetoothServices.toMutableList().removeIf {
+                        it.device.address == device.macAddress
+                    }
+
+                    viewModel.deleteDevice(device.macAddress)
+                },
+                onDismiss = {
+                    showDeleteDialog = false
+                    deviceForDeletion = null
+                },
             )
         }
     }
