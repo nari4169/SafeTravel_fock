@@ -8,6 +8,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -50,29 +51,31 @@ fun DeviceListItem(
     val verificationToastMessage = stringResource(R.string.lbl_verification_successful)
 
     ElevatedCard(elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)) {
-        Box {
-            DeviceContent(
-                device = device,
-                onLockStateClicked = onLockStateChanged,
-                onCustomizeClick = { showBottomSheet = true },
-                onDeleteClick = { showDeleteDialog = true },
-                onRenameClick = { showRenameDialog = true },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
-
-            if (!device.isConnected || !device.isVerified || device.isConnectionLoading) {
-                DeviceOverlay(
-                    isConnected = device.isConnected,
-                    isConnectionLoading = device.isConnectionLoading,
+        Surface {
+            Box {
+                DeviceContent(
+                    device = device,
+                    onLockStateClicked = onLockStateChanged,
+                    onCustomizeClick = { showBottomSheet = true },
                     onDeleteClick = { showDeleteDialog = true },
-                    onVerifyClick = { showVerifyDialog = true },
-                    onRetryConnectionClick = onRetryConnection,
+                    onRenameClick = { showRenameDialog = true },
                     modifier = Modifier
-                        .matchParentSize()
-                        .align(Alignment.Center)
+                        .fillMaxWidth()
+                        .padding(8.dp)
                 )
+
+                if (!device.isConnected || !device.isVerified || device.isConnectionLoading) {
+                    DeviceOverlay(
+                        isConnected = device.isConnected,
+                        isConnectionLoading = device.isConnectionLoading,
+                        onDeleteClick = { showDeleteDialog = true },
+                        onVerifyClick = { showVerifyDialog = true },
+                        onRetryConnectionClick = onRetryConnection,
+                        modifier = Modifier
+                            .matchParentSize()
+                            .align(Alignment.Center)
+                    )
+                }
             }
         }
     }
