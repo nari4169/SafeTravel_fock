@@ -35,7 +35,6 @@ class BluetoothService(
     override fun onConnected(socket: BluetoothSocket, socketType: SocketType) {
         Log.i(TAG, "Connected to device: ${device.address}")
         handler.onConnectionSuccess(macAddress = device.address)
-        connectThread = null
         connectedThread = ConnectedThread(
             socket = socket,
             socketType = socketType,

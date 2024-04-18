@@ -27,18 +27,21 @@ import com.example.safetravel.presentation.viewmodel.MainViewModel
 fun DevicesScreen(
     viewModel: MainViewModel,
     bondedDevices: List<BluetoothDevice>,
-    onVerifyDeviceClick: (Device) -> Unit,
 ) {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var bluetoothServices by remember { mutableStateOf<List<BluetoothService>>(emptyList()) }
-    val lifecycleOwner = LocalLifecycleOwner.current
+    var showVerifyDialog by remember { mutableStateOf(false) }
+    var deviceForVerification by remember { mutableStateOf<Device?>(null) }
 
     LaunchedEffect(uiState.devices.size) {
-        val newDevices = bondedDevices.filter { bluetoothDevice ->
-            bluetoothDevice.address in uiState.devices.map { it.macAddress }
-        }.filter { bluetoothDevice ->
-            bluetoothDevice.address !in bluetoothServices.map { it.device.address }
+        val devicesAddresses = uiState.devices.map { it.macAddress }
+        val servicesDeviceAddresses = bluetoothServices.map { it.device.address }
+        val newDevices = bondedDevices.filter {
+            it.address in devicesAddresses
+        }.filter {
+            it.address !in servicesDeviceAddresses
         }
 
         val newServices = newDevices.map {
@@ -70,8 +73,21 @@ fun DevicesScreen(
         items(uiState.devices, { it.macAddress }) { device ->
             DeviceListItem(
                 device = device,
-                onDeleteClick = { viewModel.deleteDevice(device.macAddress) },
-                onVerifyClick = { onVerifyDeviceClick(device) },
+                onDeleteClick = {
+                    bluetoothServices.firstOrNull {
+                        it.device.address == device.macAddress
+                    }?.apply { stop() }
+
+                    bluetoothServices.toMutableList().removeIf {
+                        it.device.address == device.macAddress
+                    }
+
+                    viewModel.deleteDevice(device.macAddress)
+                },
+                onVerifyClick = {
+                    deviceForVerification = device
+                    showVerifyDialog = true
+                },
                 onLockStateClicked = {
                     viewModel.changeLockedState(device.macAddress)
                     val service = bluetoothServices.first { it.device.address == device.macAddress }
@@ -80,6 +96,21 @@ fun DevicesScreen(
                 onRetryConnectionClick = {
                     val service = bluetoothServices.first { it.device.address == device.macAddress }
                     service.retryConnection()
+                }
+            )
+        }
+    }
+
+    if (showVerifyDialog) {
+        deviceForVerification?.let {
+            VerificationAlertDialog(
+                device = it,
+                onDismiss = {
+                    showVerifyDialog = false
+                    deviceForVerification = null
+                },
+                onVerificationSuccessful = {
+                    viewModel.markDeviceAsVerified(it.macAddress)
                 }
             )
         }

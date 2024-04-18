@@ -28,12 +28,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.safetravel.R
 import com.example.safetravel.domain.model.BluetoothStatus
-import com.example.safetravel.domain.model.Device
 import com.example.safetravel.presentation.components.AddDeviceScreen
 import com.example.safetravel.presentation.components.DevicesScreen
 import com.example.safetravel.presentation.components.EmptyScreen
 import com.example.safetravel.presentation.components.LoadingScreen
-import com.example.safetravel.presentation.components.VerificationAlertDialog
 import com.example.safetravel.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
@@ -50,8 +48,6 @@ fun SafeTravelApp(
     val bluetoothOffToastMessage = stringResource(R.string.lbl_bluetooth_off_toast)
     val modalBottomSheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
-    var showVerifyDialog by remember { mutableStateOf(false) }
-    var deviceForVerification by remember { mutableStateOf<Device?>(null) }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     if (showBottomSheet && uiState.bluetoothStatus == BluetoothStatus.OFF) {
@@ -65,10 +61,6 @@ fun SafeTravelApp(
             else -> DevicesScreen(
                 viewModel = viewModel,
                 bondedDevices = bondedDevices,
-                onVerifyDeviceClick = { device ->
-                    deviceForVerification = device
-                    showVerifyDialog = true
-                },
             )
         }
 
@@ -91,21 +83,6 @@ fun SafeTravelApp(
                     )
                 }
             )
-        }
-
-        if (showVerifyDialog) {
-            deviceForVerification?.let {
-                VerificationAlertDialog(
-                    device = it,
-                    onDismiss = {
-                        showVerifyDialog = false
-                        deviceForVerification = null
-                    },
-                    onVerificationSuccessful = {
-                        viewModel.markDeviceAsVerified(it.macAddress)
-                    }
-                )
-            }
         }
 
         ExtendedFloatingActionButton(

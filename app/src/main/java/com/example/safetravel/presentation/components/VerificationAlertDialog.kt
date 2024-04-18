@@ -44,7 +44,6 @@ fun VerificationAlertDialog(
                 TextField(
                     value = text,
                     isError = isError,
-                    singleLine = true,
                     onValueChange = {
                         isError = false
                         text = it

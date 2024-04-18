@@ -1,6 +1,5 @@
 package com.example.safetravel.data.service
 
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.util.Log
 import com.example.safetravel.domain.model.SocketType
@@ -23,16 +22,16 @@ class ConnectedThread(
         val buffer = ByteArray(BUFFER_SIZE)
 
         while (true) {
-            if (inputStream.available() > NO_INPUT_STREAM_BYTES) {
-                runBlocking { delay(DELAY_TIME) }
-                try {
+            try {
+                if (inputStream.available() > NO_INPUT_STREAM_BYTES) {
+                    runBlocking { delay(DELAY_TIME) }
                     val inputBytes = inputStream.read(buffer)
                     listener.onReadMessage(inputBytes, buffer)
-                } catch (readException: IOException) {
-                    Log.e(TAG, "Failed to read from socket: $socketType", readException)
-                    listener.onConnectionLost()
-                    break
                 }
+            } catch (readException: IOException) {
+                Log.e(TAG, "Failed to read from socket: $socketType", readException)
+                listener.onConnectionLost()
+                break
             }
         }
     }

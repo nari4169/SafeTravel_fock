@@ -136,7 +136,7 @@ fun DeviceListItem(
                             }
                         }
 
-                        !device.isVerified -> {
+                        else -> {
                             Text(text = stringResource(R.string.lbl_device_not_verified_message))
 
                             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
