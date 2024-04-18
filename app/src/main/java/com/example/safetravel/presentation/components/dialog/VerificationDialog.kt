@@ -23,7 +23,7 @@ import com.example.safetravel.R
 import com.example.safetravel.domain.model.Device
 
 @Composable
-fun VerificationAlertDialog(
+fun VerificationDialog(
     device: Device,
     onDismiss: () -> Unit,
     onVerificationSuccessful: () -> Unit,

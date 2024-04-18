@@ -24,7 +24,7 @@ import com.example.safetravel.R
 import com.example.safetravel.domain.model.Device
 import com.example.safetravel.presentation.components.CustomizationScreen
 import com.example.safetravel.presentation.components.dialog.DeleteDialog
-import com.example.safetravel.presentation.components.dialog.VerificationAlertDialog
+import com.example.safetravel.presentation.components.dialog.VerificationDialog
 import com.example.safetravel.presentation.model.DeviceType
 import kotlinx.coroutines.launch
 
@@ -74,7 +74,7 @@ fun DeviceListItem(
     }
 
     if (showVerifyDialog) {
-        VerificationAlertDialog(
+        VerificationDialog(
             device = device,
             onDismiss = { showVerifyDialog = false },
             onVerificationSuccessful = {
