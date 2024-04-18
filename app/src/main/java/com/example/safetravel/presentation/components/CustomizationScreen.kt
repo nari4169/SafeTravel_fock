@@ -4,6 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -54,5 +56,7 @@ fun CustomizationScreen(onDeviceTypeClick: (DeviceType) -> Unit) {
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(16.dp)
         )
+
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }

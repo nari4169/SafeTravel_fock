@@ -82,23 +82,23 @@ fun DeviceListItem(
                         }
 
                         FilledTonalIconButton(
-                            onClick = onDeleteClick,
-                            enabled = isEnabled,
-                            shape = MaterialTheme.shapes.small
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_delete),
-                                contentDescription = null,
-                            )
-                        }
-
-                        FilledTonalIconButton(
                             onClick = onCustomizeClick,
                             enabled = isEnabled,
                             shape = MaterialTheme.shapes.small
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_customize),
+                                contentDescription = null,
+                            )
+                        }
+
+                        FilledTonalIconButton(
+                            onClick = onDeleteClick,
+                            enabled = isEnabled,
+                            shape = MaterialTheme.shapes.small
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_delete),
                                 contentDescription = null,
                             )
                         }

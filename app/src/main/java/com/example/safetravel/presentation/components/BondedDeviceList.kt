@@ -39,7 +39,6 @@ fun BondedDevicesList(
     val pagerState = rememberPagerState { pages.count() }
 
     Box(modifier = modifier) {
-
         HorizontalPager(
             state = pagerState,
             contentPadding = PaddingValues(end = 24.dp),
