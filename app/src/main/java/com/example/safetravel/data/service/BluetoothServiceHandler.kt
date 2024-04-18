@@ -5,6 +5,8 @@ interface BluetoothServiceHandler {
 
     fun onWriteMessage(macAddress: String, isSuccessful: Boolean)
 
+    fun onStartConnecting(macAddress: String)
+
     fun onConnectionSuccess(macAddress: String)
 
     fun onConnectionFailed(macAddress: String)

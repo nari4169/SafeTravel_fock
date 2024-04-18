@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilledTonalIconToggleButton
@@ -34,6 +35,7 @@ fun DeviceListItem(
     onRetryConnectionClick: () -> Unit,
 ) {
     val isEnabled = device.isConnected && device.isVerified
+    val hasOverlay = !device.isConnected || !device.isVerified || device.isConnectionLoading
     val lockedStateDrawable = if (device.isLocked) R.drawable.ic_locked else R.drawable.ic_unlocked
     ElevatedCard(elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)) {
         Box {
@@ -92,7 +94,7 @@ fun DeviceListItem(
                 }
             }
 
-            if (!isEnabled) {
+            if (hasOverlay) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -101,25 +103,58 @@ fun DeviceListItem(
                         .align(Alignment.Center)
                         .background(MaterialTheme.colorScheme.background.copy(alpha = 0.85f))
                 ) {
-                    Text(
-                        text = if (!device.isConnected) {
-                            stringResource(R.string.lbl_device_not_connected_message)
-                        } else {
-                            stringResource(R.string.lbl_device_not_verified_message)
-                        }
-                    )
+                    when {
+                        device.isConnectionLoading -> {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(30.dp),
+                                strokeWidth = 2.dp
+                            )
 
-                    OutlinedButton(
-                        onClick = if (!device.isConnected) onRetryConnectionClick else onVerifyClick,
-                        shape = MaterialTheme.shapes.small
-                    ) {
-                        Text(
-                            text = if (!device.isConnected) {
-                                stringResource(R.string.lbl_retry_connection)
-                            } else {
-                                stringResource(R.string.lbl_verify)
+                            Text(
+                                text = stringResource(R.string.lbl_connecting),
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+
+                        !device.isConnected -> {
+                            Text(text = stringResource(R.string.lbl_device_not_connected_message))
+
+                            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                                OutlinedButton(
+                                    onClick = onRetryConnectionClick,
+                                    shape = MaterialTheme.shapes.small
+                                ) {
+                                    Text(text = stringResource(R.string.lbl_retry_connection))
+                                }
+
+                                OutlinedButton(
+                                    onClick = onDeleteClick,
+                                    shape = MaterialTheme.shapes.small
+                                ) {
+                                    Text(text = stringResource(R.string.lbl_delete_device))
+                                }
                             }
-                        )
+                        }
+
+                        !device.isVerified -> {
+                            Text(text = stringResource(R.string.lbl_device_not_verified_message))
+
+                            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                                OutlinedButton(
+                                    onClick = onVerifyClick,
+                                    shape = MaterialTheme.shapes.small
+                                ) {
+                                    Text(text = stringResource(R.string.lbl_verify))
+                                }
+
+                                OutlinedButton(
+                                    onClick = onDeleteClick,
+                                    shape = MaterialTheme.shapes.small
+                                ) {
+                                    Text(text = stringResource(R.string.lbl_delete_device))
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -18,6 +18,7 @@ class BluetoothService(
 
     init {
         Log.i(TAG, "Start connection to device: ${device.address}")
+        handler.onStartConnecting(device.address)
         connect(SocketType.SECURE)
     }
 
@@ -75,6 +76,7 @@ class BluetoothService(
 
     fun retryConnection() {
         Log.i(TAG, "Retry connection for device: ${device.address}")
+        handler.onStartConnecting(device.address)
         connect(SocketType.SECURE)
     }
 

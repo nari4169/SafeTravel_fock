@@ -7,4 +7,5 @@ data class Device(
     val uuid: String? = null,
     val isConnected: Boolean = false,
     val isVerified: Boolean = false,
+    val isConnectionLoading: Boolean = true,
 )
