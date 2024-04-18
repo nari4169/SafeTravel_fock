@@ -18,7 +18,6 @@
     <string name="lbl_device_not_connected_message">This device is not connected</string>
     <string name="lbl_retry_connection">Retry connection</string>
     <string name="lbl_device_not_verified_message">This device is not verified</string>
-    <string name="lbl_verify">Verify</string>
     <string name="lbl_connecting">Connecting…</string>
     <string name="lbl_delete_device">Delete device</string>
 
@@ -33,5 +32,13 @@
 
     <!--    LOADING SCREEN    -->
     <string name="lbl_loading">Loading…</string>
+
+    <!--    VERIFY DIALOG    -->
+    <string name="lbl_verify_device">Verify device</string>
+    <string name="lbl_verify_message">Enter the id of the device in order to enable it</string>
+    <string name="lbl_verify">Verify</string>
+    <string name="lbl_cancel">Cancel</string>
+    <string name="lbl_device_id">Device Id</string>
+    <string name="lbl_wrong_device_id">Wrong device Id!</string>
 
 </resources>

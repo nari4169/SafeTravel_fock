@@ -48,6 +48,21 @@ class MainViewModel(
         }
     }
 
+    fun markDeviceAsVerified(macAddress: String) {
+        viewModelScope.launch {
+            val updatedDevices = _uiState.value.devices.map { device ->
+                if (device.macAddress == macAddress) {
+                    device.copy(isVerified = true)
+                } else {
+                    device
+                }
+            }
+
+            _uiState.update { it.copy(devices = updatedDevices) }
+            deviceRepository.markDeviceAsVerified(macAddress)
+        }
+    }
+
     fun deleteDevice(macAddress: String) {
         viewModelScope.launch {
             deviceRepository.deleteDevice(macAddress)
@@ -56,6 +71,15 @@ class MainViewModel(
 
     fun changeLockedState(macAddress: String) {
         viewModelScope.launch {
+            val updatedDevices = _uiState.value.devices.map { device ->
+                if (device.macAddress == macAddress) {
+                    device.copy(isLocked = !device.isLocked)
+                } else {
+                    device
+                }
+            }
+
+            _uiState.update { it.copy(devices = updatedDevices) }
             deviceRepository.changeLockedState(macAddress)
         }
     }
@@ -64,7 +88,7 @@ class MainViewModel(
         viewModelScope.launch {
             deviceRepository.reconcileDevices(bondedDevicesAddresses)
             deviceRepository.getDevicesAsFlow().collect { devices ->
-                delay(LOADING_DELAY)
+                if (devices.isNotEmpty() && uiState.value.devices.isEmpty()) delay(LOADING_DELAY)
                 if (_uiState.value.devices.isEmpty()) {
                     _uiState.update {
                         it.copy(
@@ -73,18 +97,18 @@ class MainViewModel(
                         )
                     }
                 } else {
-                    val devicesWithConnectivity = devices.mapNotNull { device ->
+                    val devicesWithConnectivity = devices.map { device ->
                         val isConnected = _uiState.value.devices.firstOrNull {
                             it.macAddress == device.macAddress
-                        }?.isConnected ?: return@mapNotNull null
+                        }?.isConnected
 
                         val isConnectionLoading = _uiState.value.devices.firstOrNull {
                             it.macAddress == device.macAddress
-                        }?.isConnectionLoading ?: return@mapNotNull null
+                        }?.isConnectionLoading
 
                         device.copy(
-                            isConnected = isConnected,
-                            isConnectionLoading = isConnectionLoading
+                            isConnected = isConnected ?: false,
+                            isConnectionLoading = isConnectionLoading ?: false
                         )
                     }
 
@@ -180,7 +204,7 @@ class MainViewModel(
 
     companion object {
         private const val TAG = "MainViewModel"
-        private const val LOADING_DELAY = 1000L
+        private const val LOADING_DELAY = 500L
         private const val MESSAGE_SEPARATOR = ";"
         private const val UUID_MESSAGE_INDEX = 0
         private const val LOCKED_STATE_MESSAGE_INDEX = 1

@@ -22,6 +22,13 @@ class DeviceRepositoryImpl(private val deviceDao: DeviceDao) : DeviceRepository 
         }
     }
 
+    override suspend fun markDeviceAsVerified(macAddress: String) {
+        withContext(Dispatchers.Default) {
+            val device = deviceDao.getDevice(macAddress)
+            deviceDao.updateDevice(device.copy(isVerified = true))
+        }
+    }
+
     override suspend fun changeLockedState(macAddress: String) {
         withContext(Dispatchers.Default) {
             val device = deviceDao.getDevice(macAddress)
