@@ -6,7 +6,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.safetravel.data.model.DeviceEntity
-import com.example.safetravel.domain.model.Device
 import kotlinx.coroutines.flow.Flow
 
 @Dao
