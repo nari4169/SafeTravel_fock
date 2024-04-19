@@ -44,7 +44,7 @@ class BluetoothService(
             listener = this
         ).apply { start() }
 
-        write(DeviceMessage.CONNECTED.tag)
+        connectedThread?.write(DeviceMessage.CONNECTED.tag.toByteArray())
     }
 
     override fun onReadMessage(inputBytes: Int, buffer: ByteArray) {
@@ -87,9 +87,10 @@ class BluetoothService(
         connect(SocketType.SECURE)
     }
 
-    fun write(message: String) {
+    fun write(message: String, uuid: String) {
         Log.i(TAG, "Write to bluetooth device: ${device.address}")
-        connectedThread?.write(message.toByteArray())
+        val messageWithUuid = "$message;$uuid"
+        connectedThread?.write(messageWithUuid.toByteArray())
     }
 
     fun stop() {

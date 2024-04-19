@@ -23,7 +23,6 @@ import com.example.safetravel.data.service.BluetoothService
 import com.example.safetravel.data.service.BluetoothServiceHandler
 import com.example.safetravel.domain.model.Device
 import com.example.safetravel.domain.model.DeviceMessage
-import com.example.safetravel.domain.model.LockStatus
 import com.example.safetravel.presentation.components.devicelistitem.DeviceListItem
 import com.example.safetravel.presentation.model.DeviceType
 
@@ -80,7 +79,7 @@ fun DevicesScreen(
                 onLockStateChanged = {
                     onDeviceLockedStateChanged(device.macAddress)
                     val service = bluetoothServices.first { it.device.address == device.macAddress }
-                    service.write(DeviceMessage.LOCK_STATE_CHANGED.tag)
+                    device.uuid?.let { service.write(DeviceMessage.LOCK_STATE_CHANGED.tag, it) }
                 },
                 onDelete = {
                     onDeleteDevice(device.macAddress)
