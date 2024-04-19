@@ -22,6 +22,10 @@
     <string name="lbl_bluetooth_off_snackbar">Bluetooth is off</string>
 
     <!--    WARNINGS    -->
+    <string name="lbl_no_nfc_device">No NFC device</string>
+    <string name="lbl_nfc_device">NFC: %s</string>
+
+    <!--    WARNINGS    -->
     <string name="lbl_reconnect">Reconnect</string>
     <string name="lbl_connecting">Connecting…</string>
 

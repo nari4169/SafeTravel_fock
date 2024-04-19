@@ -19,6 +19,7 @@ import com.example.safetravel.presentation.theme.SafeTravelTheme
 fun DeviceActionsRow(
     lockStatus: LockStatus,
     onLockStateClicked: () -> Unit,
+    onNfcClicked: () -> Unit,
     onCustomizeClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onRenameClick: () -> Unit,
@@ -31,6 +32,16 @@ fun DeviceActionsRow(
         ) {
             Icon(
                 painter = painterResource(lockStatus.drawableRes),
+                contentDescription = null,
+            )
+        }
+
+        FilledTonalIconButton(
+            onClick = onNfcClicked,
+            shape = MaterialTheme.shapes.small
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_nfc),
                 contentDescription = null,
             )
         }
@@ -75,6 +86,7 @@ private fun DeviceActionsRowPreview() {
         DeviceActionsRow(
             lockStatus = LockStatus.LOCKED,
             onLockStateClicked = {},
+            onNfcClicked = {},
             onCustomizeClick = {},
             onDeleteClick = {},
             onRenameClick = {}

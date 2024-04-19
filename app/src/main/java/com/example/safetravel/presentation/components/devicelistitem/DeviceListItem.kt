@@ -42,6 +42,7 @@ import java.util.UUID
 fun DeviceListItem(
     device: Device,
     onLockStateChanged: () -> Unit,
+    onNfcClicked: () -> Unit,
     onDelete: () -> Unit,
     onVerified: () -> Unit,
     onRename: (String) -> Unit,
@@ -86,6 +87,7 @@ fun DeviceListItem(
                             else -> onLockStateChanged()
                         }
                     },
+                    onNfcClicked = onNfcClicked,
                     onCustomizeClick = { showBottomSheet = true },
                     onDeleteClick = { showDeleteDialog = true },
                     onRenameClick = { showRenameDialog = true },
@@ -179,6 +181,7 @@ private fun DeviceListItemPreview() {
                 type = DeviceType.BACKPACK
             ),
             onLockStateChanged = {},
+            onNfcClicked = {},
             onDelete = {},
             onVerified = {},
             onRename = {},

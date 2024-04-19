@@ -25,6 +25,7 @@ import java.util.UUID
 fun DeviceContent(
     device: Device,
     onLockStateClicked: () -> Unit,
+    onNfcClicked: () -> Unit,
     onCustomizeClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onRenameClick: () -> Unit,
@@ -59,6 +60,7 @@ fun DeviceContent(
             DeviceActionsRow(
                 lockStatus = device.lockStatus,
                 onLockStateClicked = onLockStateClicked,
+                onNfcClicked = onNfcClicked,
                 onCustomizeClick = onCustomizeClick,
                 onDeleteClick = onDeleteClick,
                 onRenameClick = onRenameClick
@@ -85,6 +87,7 @@ private fun DeviceContentPreview() {
 
             ),
             onLockStateClicked = {},
+            onNfcClicked = {},
             onCustomizeClick = {},
             onDeleteClick = {},
             onRenameClick = {}

@@ -32,10 +32,12 @@ fun DevicesScreen(
     handler: BluetoothServiceHandler,
     bondedDevices: List<BluetoothDevice>,
     onDeviceLockedStateChanged: (String) -> Unit,
+    onNfcDeviceSelected: (String) -> Unit,
     onDeleteDevice: (String) -> Unit,
     onDeviceVerified: (String) -> Unit,
     onRenameDevice: (String, String) -> Unit,
-    onDeviceTypeChanged: (String, DeviceType) -> Unit
+    onDeviceTypeChanged: (String, DeviceType) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -71,9 +73,9 @@ fun DevicesScreen(
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(16.dp),
-        modifier = Modifier.animateContentSize()
+        modifier = modifier.animateContentSize()
     ) {
-        items(devices, { it.macAddress }) { device ->
+        items(devices) { device ->
             DeviceListItem(
                 device = device,
                 onLockStateChanged = {
@@ -90,6 +92,9 @@ fun DevicesScreen(
                     bluetoothServices.toMutableList().removeIf {
                         it.device.address == device.macAddress
                     }
+                },
+                onNfcClicked = {
+                    onNfcDeviceSelected(device.macAddress)
                 },
                 onVerified = {
                     onDeviceVerified(device.macAddress)

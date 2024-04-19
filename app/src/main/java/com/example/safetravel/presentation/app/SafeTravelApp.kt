@@ -3,15 +3,12 @@ package com.example.safetravel.presentation.app
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.widget.Toast
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,16 +16,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.safetravel.R
 import com.example.safetravel.domain.model.BluetoothStatus
 import com.example.safetravel.presentation.components.AddDeviceScreen
+import com.example.safetravel.presentation.components.BottomBar
 import com.example.safetravel.presentation.components.DevicesScreen
 import com.example.safetravel.presentation.components.EmptyScreen
 import com.example.safetravel.presentation.components.LoadingScreen
@@ -54,7 +49,7 @@ fun SafeTravelApp(
         showBottomSheet = false
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize()) {
         when {
             uiState.isLoading -> LoadingScreen()
             uiState.devices.isEmpty() -> EmptyScreen()
@@ -63,56 +58,55 @@ fun SafeTravelApp(
                 handler = viewModel,
                 bondedDevices = bondedDevices,
                 onDeviceLockedStateChanged = viewModel::changeLockStatus,
+                onNfcDeviceSelected = viewModel::selectNfcDevice,
                 onDeleteDevice = viewModel::deleteDevice,
                 onDeviceVerified = viewModel::markDeviceAsVerified,
                 onRenameDevice = viewModel::renameDevice,
-                onDeviceTypeChanged = viewModel::changeDeviceType
+                onDeviceTypeChanged = viewModel::changeDeviceType,
+                modifier = Modifier.weight(1f)
             )
         }
 
-        if (showBottomSheet) {
-            ModalBottomSheet(
-                sheetState = modalBottomSheetState,
-                onDismissRequest = { showBottomSheet = false },
-                content = {
-                    AddDeviceScreen(
-                        bondedDevices = bondedDevices.filter { bondedDevice ->
-                            bondedDevice.address !in uiState.devices.map { it.macAddress }
-                        },
-                        onDeviceClick = { bluetoothDevice ->
-                            val job = coroutineScope.launch { modalBottomSheetState.hide() }
-                            job.invokeOnCompletion {
-                                showBottomSheet = false
-                                viewModel.addDevice(bluetoothDevice)
-                            }
-                        }
-                    )
-                }
-            )
-        }
+        HorizontalDivider()
 
-        ExtendedFloatingActionButton(
-            text = {
-                Text(text = stringResource(R.string.lbl_add_device))
+        BottomBar(
+            modifier = Modifier.fillMaxWidth(),
+            nfcDevice = uiState.devices.firstOrNull {
+                it.macAddress == uiState.nfcSelectedDeviceAddress
             },
-            icon = {
-                Icon(
-                    modifier = Modifier.size(56.dp),
-                    painter = painterResource(R.drawable.ic_add),
-                    contentDescription = null
-                )
-            },
-            onClick = {
+            onFloatingActionButtonClick = {
                 when (uiState.bluetoothStatus) {
                     BluetoothStatus.ON -> showBottomSheet = true
                     BluetoothStatus.OFF -> {
-                        Toast.makeText(context, bluetoothOffToastMessage, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            bluetoothOffToastMessage,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
-            },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
+            }
+        )
+    }
+
+    if (showBottomSheet) {
+        ModalBottomSheet(
+            sheetState = modalBottomSheetState,
+            onDismissRequest = { showBottomSheet = false },
+            content = {
+                AddDeviceScreen(
+                    bondedDevices = bondedDevices.filter { bondedDevice ->
+                        bondedDevice.address !in uiState.devices.map { it.macAddress }
+                    },
+                    onDeviceClick = { bluetoothDevice ->
+                        val job = coroutineScope.launch { modalBottomSheetState.hide() }
+                        job.invokeOnCompletion {
+                            showBottomSheet = false
+                            viewModel.addDevice(bluetoothDevice)
+                        }
+                    }
+                )
+            }
         )
     }
 }

@@ -65,6 +65,12 @@ class MainViewModel(
         }
     }
 
+    fun selectNfcDevice(macAddress: String) {
+        _uiState.update {
+            it.copy(nfcSelectedDeviceAddress = macAddress)
+        }
+    }
+
     fun deleteDevice(macAddress: String) {
         viewModelScope.launch {
             deviceRepository.deleteDevice(macAddress)
