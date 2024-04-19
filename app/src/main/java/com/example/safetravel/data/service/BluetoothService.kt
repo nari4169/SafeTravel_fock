@@ -10,6 +10,9 @@ import com.example.safetravel.domain.model.DeviceMessage
 import com.example.safetravel.domain.model.SocketType
 import com.example.safetravel.domain.runWithBluetoothPermission
 
+/**
+ * Service for managing thread for bluetooth connections on threads
+ */
 class BluetoothService(
     val device: BluetoothDevice,
     private val handler: BluetoothServiceHandler,

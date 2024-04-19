@@ -1,5 +1,9 @@
 package com.example.safetravel.data.service
 
+/**
+ * Interface that has to be implemented by a handler which will
+ * manage the connection states accordingly
+ */
 interface BluetoothServiceHandler {
     fun onReadMessage(macAddress: String, message: String)
 

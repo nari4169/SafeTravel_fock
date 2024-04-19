@@ -1,5 +1,6 @@
 package com.example.safetravel.presentation.components.devicelistitem
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,8 +13,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.safetravel.domain.model.Device
+import com.example.safetravel.presentation.model.DeviceType
+import com.example.safetravel.presentation.theme.SafeTravelTheme
+import java.util.UUID
 
 @Composable
 fun DeviceContent(
@@ -59,5 +64,30 @@ fun DeviceContent(
                 onRenameClick = onRenameClick
             )
         }
+    }
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun DeviceContentPreview() {
+    SafeTravelTheme {
+        DeviceContent(
+            device = Device(
+                macAddress = UUID.randomUUID().toString(),
+                name = "Backpack",
+                isLocked = true,
+                uuid = UUID.randomUUID().toString(),
+                isConnected = false,
+                isVerified = false,
+                isConnectionLoading = false,
+                type = DeviceType.BACKPACK
+
+            ),
+            onLockStateClicked = {},
+            onCustomizeClick = {},
+            onDeleteClick = {},
+            onRenameClick = {}
+        )
     }
 }

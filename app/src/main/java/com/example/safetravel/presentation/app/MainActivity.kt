@@ -78,6 +78,8 @@ class MainActivity : ComponentActivity() {
                 DisposableEffect(lifecycleOwner) {
                     val observer = LifecycleEventObserver { _, event ->
                         if (event == Lifecycle.Event.ON_RESUME) {
+                            // Get the phone's paired devices again on ON_RESUME and remove
+                            // the ones that are no longer paired from the database
                             val service = context.getSystemService(Context.BLUETOOTH_SERVICE)
                             val adapter = (service as BluetoothManager).adapter
                             bondedDevices = adapter.bondedDevices.toList()

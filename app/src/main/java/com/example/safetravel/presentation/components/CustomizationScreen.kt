@@ -1,5 +1,6 @@
 package com.example.safetravel.presentation.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,9 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.safetravel.R
 import com.example.safetravel.presentation.model.DeviceType
+import com.example.safetravel.presentation.theme.SafeTravelTheme
 
 private const val COLUMN_COUNT = 3
 
@@ -61,5 +64,14 @@ fun CustomizationScreen(onDeviceTypeClick: (DeviceType) -> Unit) {
         )
 
         Spacer(modifier = Modifier.height(32.dp))
+    }
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun CustomizationScreenPreview() {
+    SafeTravelTheme {
+        CustomizationScreen(onDeviceTypeClick = {})
     }
 }

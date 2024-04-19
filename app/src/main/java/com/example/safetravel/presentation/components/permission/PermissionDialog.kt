@@ -1,5 +1,6 @@
 package com.example.safetravel.presentation.components.permission
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
@@ -11,8 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.safetravel.R
 import com.example.safetravel.domain.model.DetailedPermission
+import com.example.safetravel.presentation.theme.SafeTravelTheme
 
 @Composable
 fun PermissionDialog(
@@ -21,7 +24,7 @@ fun PermissionDialog(
     onDismiss: () -> Unit,
     onOkClick: () -> Unit,
     onGrantClick: () -> Unit,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
 ) {
     AlertDialog(
         modifier = modifier,
@@ -57,4 +60,34 @@ fun PermissionDialog(
             )
         }
     )
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun PermissionDialogPreview() {
+    SafeTravelTheme {
+        PermissionDialog(
+            permission = DetailedPermission.BluetoothPermission,
+            isPermanentlyDeclined = false,
+            onDismiss = {},
+            onOkClick = {},
+            onGrantClick = {},
+        )
+    }
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun PermissionDialogPermanentlyDeclinedPreview() {
+    SafeTravelTheme {
+        PermissionDialog(
+            permission = DetailedPermission.BluetoothPermission,
+            isPermanentlyDeclined = true,
+            onDismiss = {},
+            onOkClick = {},
+            onGrantClick = {},
+        )
+    }
 }

@@ -17,6 +17,10 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.stateIn
 
+/**
+ * Data source creates a broadcast receiver for bluetooth state and
+ * exposes a [StateFlow] of [BluetoothStatus]
+ */
 class BluetoothStatusDataSource(
     private val context: Context,
     coroutineScope: CoroutineScope

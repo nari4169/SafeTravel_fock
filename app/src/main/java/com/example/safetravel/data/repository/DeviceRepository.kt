@@ -4,7 +4,6 @@ import com.example.safetravel.domain.model.Device
 import kotlinx.coroutines.flow.Flow
 
 interface DeviceRepository {
-
     suspend fun addDevice(device: Device)
 
     suspend fun deleteDevice(macAddress: String)
@@ -27,5 +26,9 @@ interface DeviceRepository {
 
     suspend fun getDevicesAsFlow(): Flow<List<Device>>
 
+    /**
+     * Removes from database any saved device that is now not
+     * present in the phone's paired devices list.
+     */
     suspend fun reconcileDevices(bondedDevicesAddresses: List<String>)
 }

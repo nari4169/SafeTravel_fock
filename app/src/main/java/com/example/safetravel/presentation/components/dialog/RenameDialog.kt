@@ -1,5 +1,6 @@
 package com.example.safetravel.presentation.components.dialog
 
+import android.content.res.Configuration
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
@@ -14,7 +15,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.safetravel.R
+import com.example.safetravel.presentation.theme.SafeTravelTheme
 
 @Composable
 fun RenameDialog(
@@ -65,4 +68,17 @@ fun RenameDialog(
             }
         }
     )
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun RenameDialogPreview() {
+    SafeTravelTheme {
+        RenameDialog(
+            deviceName = "Device Name",
+            onRename = {},
+            onDismiss = {}
+        )
+    }
 }

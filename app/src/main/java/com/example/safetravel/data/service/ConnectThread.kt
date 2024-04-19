@@ -8,6 +8,9 @@ import com.example.safetravel.domain.model.SocketType
 import java.io.IOException
 import java.util.UUID
 
+/**
+ * Thread that creates a socket for a specific bluetooth device and starts a connection
+ */
 class ConnectThread(
     private val device: BluetoothDevice,
     private val socketType: SocketType,

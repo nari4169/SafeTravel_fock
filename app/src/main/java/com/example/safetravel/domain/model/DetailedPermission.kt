@@ -4,7 +4,6 @@ import android.Manifest
 import android.os.Build
 import com.example.safetravel.R
 
-
 sealed class DetailedPermission(
     val permissions: Array<String>,
     val genericMessageId: Int,

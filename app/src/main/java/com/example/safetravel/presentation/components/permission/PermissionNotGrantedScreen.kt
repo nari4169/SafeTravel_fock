@@ -1,5 +1,6 @@
 package com.example.safetravel.presentation.components.permission
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,11 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.safetravel.R
 import com.example.safetravel.domain.openAppSettings
+import com.example.safetravel.presentation.theme.SafeTravelTheme
 
 @Composable
-fun PermissionNotGrantedScreen(modifier: Modifier) {
+fun PermissionNotGrantedScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     Column(
@@ -36,5 +39,14 @@ fun PermissionNotGrantedScreen(modifier: Modifier) {
                 textAlign = TextAlign.Center
             )
         }
+    }
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun PermissionNotGrantedScreenPreview() {
+    SafeTravelTheme {
+        PermissionNotGrantedScreen()
     }
 }

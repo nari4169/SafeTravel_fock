@@ -9,6 +9,9 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 
+/**
+ * Thread responsible for communicating with a bluetooth device via a specific socket
+ */
 class ConnectedThread(
     socket: BluetoothSocket,
     private val socketType: SocketType,
