@@ -20,7 +20,7 @@ fun DeleteDialog(
         onDismissRequest = onDismiss,
 
         title = {
-            Text(text = stringResource(R.string.lbl_delete_device))
+            Text(text = stringResource(R.string.lbl_delete_dialog_title))
         },
         text = {
             Text(text = stringResource(R.string.lbl_delete_dialog_message, deviceName))

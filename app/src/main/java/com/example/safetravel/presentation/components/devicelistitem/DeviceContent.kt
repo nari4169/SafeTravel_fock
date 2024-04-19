@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.safetravel.domain.model.Device
+import com.example.safetravel.domain.model.LockStatus
 import com.example.safetravel.presentation.model.DeviceType
 import com.example.safetravel.presentation.theme.SafeTravelTheme
 import java.util.UUID
@@ -56,8 +57,7 @@ fun DeviceContent(
             )
 
             DeviceActionsRow(
-                isLocked = device.isLocked,
-                actionsEnabled = device.isConnected && device.isVerified,
+                lockStatus = device.lockStatus,
                 onLockStateClicked = onLockStateClicked,
                 onCustomizeClick = onCustomizeClick,
                 onDeleteClick = onDeleteClick,
@@ -76,7 +76,7 @@ private fun DeviceContentPreview() {
             device = Device(
                 macAddress = UUID.randomUUID().toString(),
                 name = "Backpack",
-                isLocked = true,
+                lockStatus = LockStatus.LOCKED,
                 uuid = UUID.randomUUID().toString(),
                 isConnected = false,
                 isVerified = false,

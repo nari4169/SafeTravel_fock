@@ -12,35 +12,31 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.safetravel.R
+import com.example.safetravel.domain.model.LockStatus
 import com.example.safetravel.presentation.theme.SafeTravelTheme
 
 @Composable
 fun DeviceActionsRow(
-    isLocked: Boolean,
-    actionsEnabled: Boolean,
+    lockStatus: LockStatus,
     onLockStateClicked: () -> Unit,
     onCustomizeClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onRenameClick: () -> Unit,
 ) {
-    val lockedStateDrawable = if (isLocked) R.drawable.ic_locked else R.drawable.ic_unlocked
-
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         FilledTonalIconToggleButton(
-            checked = isLocked,
+            checked = lockStatus == LockStatus.LOCKED,
             onCheckedChange = { onLockStateClicked() },
-            enabled = actionsEnabled,
             shape = MaterialTheme.shapes.small
         ) {
             Icon(
-                painter = painterResource(lockedStateDrawable),
+                painter = painterResource(lockStatus.drawableRes),
                 contentDescription = null,
             )
         }
 
         FilledTonalIconButton(
             onClick = onCustomizeClick,
-            enabled = actionsEnabled,
             shape = MaterialTheme.shapes.small
         ) {
             Icon(
@@ -51,7 +47,6 @@ fun DeviceActionsRow(
 
         FilledTonalIconButton(
             onClick = onRenameClick,
-            enabled = actionsEnabled,
             shape = MaterialTheme.shapes.small
         ) {
             Icon(
@@ -62,7 +57,6 @@ fun DeviceActionsRow(
 
         FilledTonalIconButton(
             onClick = onDeleteClick,
-            enabled = actionsEnabled,
             shape = MaterialTheme.shapes.small
         ) {
             Icon(
@@ -79,8 +73,7 @@ fun DeviceActionsRow(
 private fun DeviceActionsRowPreview() {
     SafeTravelTheme {
         DeviceActionsRow(
-            isLocked = false,
-            actionsEnabled = true,
+            lockStatus = LockStatus.LOCKED,
             onLockStateClicked = {},
             onCustomizeClick = {},
             onDeleteClick = {},

@@ -23,6 +23,7 @@ import com.example.safetravel.data.service.BluetoothService
 import com.example.safetravel.data.service.BluetoothServiceHandler
 import com.example.safetravel.domain.model.Device
 import com.example.safetravel.domain.model.DeviceMessage
+import com.example.safetravel.domain.model.LockStatus
 import com.example.safetravel.presentation.components.devicelistitem.DeviceListItem
 import com.example.safetravel.presentation.model.DeviceType
 

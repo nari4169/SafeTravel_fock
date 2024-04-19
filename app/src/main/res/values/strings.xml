@@ -11,15 +11,21 @@
     <string name="lbl_permission_bluetooth_not_granted_message">It seems that you did not grant the bluetooth permission. Unfortunately, there are no features available without bluetooth permission.</string>
     <string name="lbl_permission_bluetooth_grant_redirect">Click here to grant permission</string>
 
-    <!--    MAIN SCREEN    -->
+    <!--    TOAST    -->
+    <string name="lbl_device_not_verified_toast">Cannot use functionality until device is verified</string>
+    <string name="lbl_device_not_connected_toast">Cannot use functionality until device is connected</string>
+    <string name="lbl_verification_successful_toast">Verification successful!</string>
     <string name="lbl_bluetooth_off_toast">Turn bluetooth on to use this function</string>
-    <string name="lbl_bluetooth_off_snackbar">Bluetooth is off</string>
+
+    <!--    SNACKBAR    -->
     <string name="lbl_enable">Enable</string>
-    <string name="lbl_device_not_connected_message">This device is not connected</string>
-    <string name="lbl_retry_connection">Retry connection</string>
-    <string name="lbl_device_not_verified_message">This device is not verified</string>
+    <string name="lbl_bluetooth_off_snackbar">Bluetooth is off</string>
+
+    <!--    WARNINGS    -->
+    <string name="lbl_reconnect">Reconnect</string>
     <string name="lbl_connecting">Connecting…</string>
-    <string name="lbl_delete_device">Delete device</string>
+
+    <!--    CUSTOMIZE SCREEN    -->
     <string name="lbl_customize_message">Customize your SafeTravel device by selecting the most suitable icon</string>
 
     <!--    ADD DEVICE SCREEN    -->
@@ -41,9 +47,9 @@
     <string name="lbl_cancel">Cancel</string>
     <string name="lbl_device_id">Device Id</string>
     <string name="lbl_wrong_device_id">Wrong device Id!</string>
-    <string name="lbl_verification_successful">Verification successful!</string>
 
     <!--    DELETE DIALOG    -->
+    <string name="lbl_delete_dialog_title">Delete device</string>
     <string name="lbl_delete_dialog_message">You are about to delete %s. Are you sure?</string>
     <string name="lbl_delete">Delete</string>
 

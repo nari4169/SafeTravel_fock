@@ -10,6 +10,7 @@ import com.example.safetravel.data.repository.DeviceRepository
 import com.example.safetravel.data.service.BluetoothServiceHandler
 import com.example.safetravel.domain.model.Device
 import com.example.safetravel.domain.model.DeviceMessage
+import com.example.safetravel.domain.model.LockStatus
 import com.example.safetravel.presentation.model.DeviceType
 import com.example.safetravel.presentation.viewmodel.model.MainUiState
 import kotlinx.coroutines.delay
@@ -85,18 +86,23 @@ class MainViewModel(
         }
     }
 
-    fun changeLockedState(macAddress: String) {
+    fun changeLockStatus(macAddress: String) {
         viewModelScope.launch {
             val updatedDevices = _uiState.value.devices.map { device ->
                 if (device.macAddress == macAddress) {
-                    device.copy(isLocked = !device.isLocked)
+                    val newLockStatus = when (device.lockStatus) {
+                        LockStatus.UNKNOWN -> LockStatus.UNKNOWN
+                        LockStatus.LOCKED -> LockStatus.LOCKED
+                        LockStatus.UNLOCKED -> LockStatus.UNLOCKED
+                    }
+                    deviceRepository.changeLockStatus(macAddress, newLockStatus.id)
+                    device.copy(lockStatus = newLockStatus)
                 } else {
                     device
                 }
             }
 
             _uiState.update { it.copy(devices = updatedDevices) }
-            deviceRepository.changeLockedState(macAddress)
         }
     }
 
@@ -162,8 +168,14 @@ class MainViewModel(
                 oldValue = DeviceMessage.UUUID.tag,
                 newValue = BLANK
             )
+
+            val lockStatus = when (lockedState) {
+                true -> LockStatus.LOCKED
+                false -> LockStatus.UNLOCKED
+            }
+
             viewModelScope.launch {
-                deviceRepository.updateLockedState(macAddress, lockedState)
+                deviceRepository.changeLockStatus(macAddress, lockStatus.id)
                 deviceRepository.updateUuid(macAddress, uuid)
             }
         }
