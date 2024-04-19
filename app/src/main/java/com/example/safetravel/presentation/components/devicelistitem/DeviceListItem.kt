@@ -62,7 +62,7 @@ fun DeviceListItem(
     ElevatedCard(elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)) {
         Surface {
             Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
                     .padding(8.dp)
                     .animateContentSize()
@@ -92,7 +92,7 @@ fun DeviceListItem(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp))
 
                 if (!device.isConnected || !device.isVerified) {
                     DeviceWarningsRow(
@@ -101,7 +101,7 @@ fun DeviceListItem(
                         reconnectLoading = device.isConnectionLoading,
                         onVerifyClick = { showVerifyDialog = true },
                         onReconnectClick = onRetryConnection,
-                        modifier = Modifier.padding(horizontal = 16.dp)
+                        modifier = Modifier.padding(horizontal = 8.dp)
                     )
                 }
             }

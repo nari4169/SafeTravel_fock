@@ -61,7 +61,7 @@ fun DeviceWarningsRow(
                 if (reconnectLoading) {
                     CircularProgressIndicator(
                         strokeWidth = 2.dp,
-                        modifier = Modifier.size(30.dp)
+                        modifier = Modifier.size(20.dp)
                     )
                 } else {
                     Icon(
