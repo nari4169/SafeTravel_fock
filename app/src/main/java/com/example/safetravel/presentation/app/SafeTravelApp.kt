@@ -51,8 +51,18 @@ fun SafeTravelApp(
 
     Column(modifier = modifier.fillMaxSize()) {
         when {
-            uiState.isLoading -> LoadingScreen()
-            uiState.devices.isEmpty() -> EmptyScreen()
+            uiState.isLoading -> LoadingScreen(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            )
+
+            uiState.devices.isEmpty() -> EmptyScreen(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            )
+
             else -> DevicesScreen(
                 devices = uiState.devices,
                 handler = viewModel,

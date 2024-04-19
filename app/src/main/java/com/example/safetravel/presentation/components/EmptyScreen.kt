@@ -3,7 +3,6 @@ package com.example.safetravel.presentation.components
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,13 +17,11 @@ import com.example.safetravel.R
 import com.example.safetravel.presentation.theme.SafeTravelTheme
 
 @Composable
-fun EmptyScreen() {
+fun EmptyScreen(modifier: Modifier = Modifier) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        modifier = modifier.padding(16.dp)
     ) {
         Text(
             text = stringResource(R.string.lbl_empty_screen_message),

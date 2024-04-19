@@ -94,9 +94,9 @@ fun DeviceListItem(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp))
-
                 if (!device.isConnected || !device.isVerified) {
+                    HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp))
+
                     DeviceWarningsRow(
                         verifyEnabled = !device.isVerified,
                         reconnectEnabled = !device.isConnected,

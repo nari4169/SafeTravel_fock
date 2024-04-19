@@ -98,8 +98,8 @@ class MainViewModel(
                 if (device.macAddress == macAddress) {
                     val newLockStatus = when (device.lockStatus) {
                         LockStatus.UNKNOWN -> LockStatus.UNKNOWN
-                        LockStatus.LOCKED -> LockStatus.LOCKED
-                        LockStatus.UNLOCKED -> LockStatus.UNLOCKED
+                        LockStatus.LOCKED -> LockStatus.UNLOCKED
+                        LockStatus.UNLOCKED -> LockStatus.LOCKED
                     }
                     deviceRepository.changeLockStatus(macAddress, newLockStatus.id)
                     device.copy(lockStatus = newLockStatus)
