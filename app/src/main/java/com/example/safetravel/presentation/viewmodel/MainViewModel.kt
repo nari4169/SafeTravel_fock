@@ -147,9 +147,9 @@ class MainViewModel(
 
     override fun onReadMessage(macAddress: String, message: String) {
         Log.d(TAG, "onReadMessage(), macAddress: $macAddress, message: $message")
-        if (DeviceMessage.getByTag(message) == DeviceMessage.UUUID) {
+        if (DeviceMessage.getByTag(message) == DeviceMessage.UUID) {
             val uuid = message.split(MESSAGE_SEPARATOR)[UUID_MESSAGE_INDEX].replace(
-                oldValue = DeviceMessage.UUUID.tag,
+                oldValue = DeviceMessage.UUID.tag,
                 newValue = BLANK
             )
 

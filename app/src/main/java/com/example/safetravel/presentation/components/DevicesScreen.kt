@@ -79,7 +79,7 @@ fun DevicesScreen(
                 device = device,
                 unUnlockClick = {
                     val service = bluetoothServices.first { it.device.address == device.macAddress }
-                    device.uuid?.let { service.write(DeviceMessage.LOCK_STATE_CHANGED.tag, it) }
+                    device.uuid?.let { service.write(DeviceMessage.UNLOCK.tag, it) }
                 },
                 onDelete = {
                     onDeleteDevice(device.macAddress)
