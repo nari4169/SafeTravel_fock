@@ -7,7 +7,6 @@ fun Device.toDeviceEntity(): DeviceEntity {
     return DeviceEntity(
         macAddress = this.macAddress,
         name = this.name,
-        lockStatusId = this.lockStatus.id,
         uuid = this.uuid,
         isVerified = this.isVerified,
         typeId = this.type.id

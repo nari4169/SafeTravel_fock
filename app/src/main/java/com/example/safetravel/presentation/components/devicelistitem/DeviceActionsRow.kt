@@ -12,32 +12,39 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.safetravel.R
-import com.example.safetravel.domain.model.LockStatus
 import com.example.safetravel.presentation.theme.SafeTravelTheme
 
 @Composable
 fun DeviceActionsRow(
-    lockStatus: LockStatus,
-    onLockStateClicked: () -> Unit,
-    onNfcClicked: () -> Unit,
+    isLocked: Boolean,
+    onUnlockClick: () -> Unit,
+    onNfcClick: () -> Unit,
     onCustomizeClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onRenameClick: () -> Unit,
 ) {
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         FilledTonalIconToggleButton(
-            checked = lockStatus == LockStatus.LOCKED,
-            onCheckedChange = { onLockStateClicked() },
-            shape = MaterialTheme.shapes.small
+            checked = isLocked,
+            shape = MaterialTheme.shapes.small,
+            onCheckedChange = {
+                if (isLocked) {
+                    onUnlockClick()
+                }
+            }
         ) {
             Icon(
-                painter = painterResource(lockStatus.drawableRes),
+                painter = if (isLocked) {
+                    painterResource(R.drawable.ic_locked)
+                } else {
+                    painterResource(R.drawable.ic_unlocked)
+                },
                 contentDescription = null,
             )
         }
 
         FilledTonalIconButton(
-            onClick = onNfcClicked,
+            onClick = onNfcClick,
             shape = MaterialTheme.shapes.small
         ) {
             Icon(
@@ -84,9 +91,9 @@ fun DeviceActionsRow(
 private fun DeviceActionsRowPreview() {
     SafeTravelTheme {
         DeviceActionsRow(
-            lockStatus = LockStatus.LOCKED,
-            onLockStateClicked = {},
-            onNfcClicked = {},
+            isLocked = true,
+            onUnlockClick = {},
+            onNfcClick = {},
             onCustomizeClick = {},
             onDeleteClick = {},
             onRenameClick = {}

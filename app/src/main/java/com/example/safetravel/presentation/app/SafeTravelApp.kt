@@ -67,7 +67,6 @@ fun SafeTravelApp(
                 devices = uiState.devices,
                 handler = viewModel,
                 bondedDevices = bondedDevices,
-                onDeviceLockedStateChanged = viewModel::changeLockStatus,
                 onNfcDeviceSelected = viewModel::selectNfcDevice,
                 onDeleteDevice = viewModel::deleteDevice,
                 onDeviceVerified = viewModel::markDeviceAsVerified,

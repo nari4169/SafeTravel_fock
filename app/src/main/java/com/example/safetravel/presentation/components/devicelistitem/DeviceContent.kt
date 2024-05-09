@@ -16,7 +16,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.safetravel.domain.model.Device
-import com.example.safetravel.domain.model.LockStatus
 import com.example.safetravel.presentation.model.DeviceType
 import com.example.safetravel.presentation.theme.SafeTravelTheme
 import java.util.UUID
@@ -24,8 +23,9 @@ import java.util.UUID
 @Composable
 fun DeviceContent(
     device: Device,
-    onLockStateClicked: () -> Unit,
-    onNfcClicked: () -> Unit,
+    isLocked: Boolean,
+    onUnlockClick: () -> Unit,
+    onNfcClick: () -> Unit,
     onCustomizeClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onRenameClick: () -> Unit,
@@ -58,9 +58,9 @@ fun DeviceContent(
             )
 
             DeviceActionsRow(
-                lockStatus = device.lockStatus,
-                onLockStateClicked = onLockStateClicked,
-                onNfcClicked = onNfcClicked,
+                isLocked = isLocked,
+                onUnlockClick = onUnlockClick,
+                onNfcClick = onNfcClick,
                 onCustomizeClick = onCustomizeClick,
                 onDeleteClick = onDeleteClick,
                 onRenameClick = onRenameClick
@@ -78,7 +78,6 @@ private fun DeviceContentPreview() {
             device = Device(
                 macAddress = UUID.randomUUID().toString(),
                 name = "Backpack",
-                lockStatus = LockStatus.LOCKED,
                 uuid = UUID.randomUUID().toString(),
                 isConnected = false,
                 isVerified = false,
@@ -86,8 +85,9 @@ private fun DeviceContentPreview() {
                 type = DeviceType.BACKPACK
 
             ),
-            onLockStateClicked = {},
-            onNfcClicked = {},
+            isLocked = true,
+            onUnlockClick = {},
+            onNfcClick = {},
             onCustomizeClick = {},
             onDeleteClick = {},
             onRenameClick = {}

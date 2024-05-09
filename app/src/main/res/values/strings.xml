@@ -16,6 +16,7 @@
     <string name="lbl_device_not_connected_toast">Cannot use functionality until device is connected</string>
     <string name="lbl_verification_successful_toast">Verification successful!</string>
     <string name="lbl_bluetooth_off_toast">Turn bluetooth on to use this function</string>
+    <string name="lbl_device_unlocked_toast">%s is unlocked!</string>
 
     <!--    SNACKBAR    -->
     <string name="lbl_enable">Enable</string>

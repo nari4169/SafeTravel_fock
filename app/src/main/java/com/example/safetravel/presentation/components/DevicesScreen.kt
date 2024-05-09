@@ -31,7 +31,6 @@ fun DevicesScreen(
     devices: List<Device>,
     handler: BluetoothServiceHandler,
     bondedDevices: List<BluetoothDevice>,
-    onDeviceLockedStateChanged: (String) -> Unit,
     onNfcDeviceSelected: (String) -> Unit,
     onDeleteDevice: (String) -> Unit,
     onDeviceVerified: (String) -> Unit,
@@ -78,8 +77,7 @@ fun DevicesScreen(
         items(devices) { device ->
             DeviceListItem(
                 device = device,
-                onLockStateChanged = {
-                    onDeviceLockedStateChanged(device.macAddress)
+                unUnlockClick = {
                     val service = bluetoothServices.first { it.device.address == device.macAddress }
                     device.uuid?.let { service.write(DeviceMessage.LOCK_STATE_CHANGED.tag, it) }
                 },
@@ -93,7 +91,7 @@ fun DevicesScreen(
                         it.device.address == device.macAddress
                     }
                 },
-                onNfcClicked = {
+                onNfcClick = {
                     onNfcDeviceSelected(device.macAddress)
                 },
                 onVerified = {

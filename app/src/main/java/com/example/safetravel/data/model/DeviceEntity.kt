@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey
 data class DeviceEntity(
     @PrimaryKey @ColumnInfo(name = "macAddress") val macAddress: String,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "lockStatusId") val lockStatusId: Int,
     @ColumnInfo(name = "uuid") val uuid: String?,
     @ColumnInfo(name = "isVerified") val isVerified: Boolean,
     @ColumnInfo(name = "typeId") val typeId: Int,

@@ -15,6 +15,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,13 +28,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.safetravel.R
 import com.example.safetravel.domain.model.Device
-import com.example.safetravel.domain.model.LockStatus
 import com.example.safetravel.presentation.components.CustomizationScreen
 import com.example.safetravel.presentation.components.dialog.DeleteDialog
 import com.example.safetravel.presentation.components.dialog.RenameDialog
 import com.example.safetravel.presentation.components.dialog.VerificationDialog
 import com.example.safetravel.presentation.model.DeviceType
 import com.example.safetravel.presentation.theme.SafeTravelTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -41,8 +42,8 @@ import java.util.UUID
 @Composable
 fun DeviceListItem(
     device: Device,
-    onLockStateChanged: () -> Unit,
-    onNfcClicked: () -> Unit,
+    unUnlockClick: () -> Unit,
+    onNfcClick: () -> Unit,
     onDelete: () -> Unit,
     onVerified: () -> Unit,
     onRename: (String) -> Unit,
@@ -59,6 +60,14 @@ fun DeviceListItem(
     val verificationToastMessage = stringResource(R.string.lbl_verification_successful_toast)
     val deviceNotVerifiedToastMessage = stringResource(R.string.lbl_device_not_verified_toast)
     val deviceNotConnectedToastMessage = stringResource(R.string.lbl_device_not_connected_toast)
+    val deviceUnlockedToastMessage = stringResource(R.string.lbl_device_unlocked_toast, device.name)
+    var isLocked by remember { mutableStateOf(true) }
+    LaunchedEffect(isLocked) {
+        if (!isLocked) {
+            delay(1000)
+            isLocked = true
+        }
+    }
 
     ElevatedCard(elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)) {
         Surface {
@@ -70,7 +79,8 @@ fun DeviceListItem(
             ) {
                 DeviceContent(
                     device = device,
-                    onLockStateClicked = {
+                    isLocked = isLocked,
+                    onUnlockClick = {
                         when {
                             !device.isConnected -> Toast.makeText(
                                 context,
@@ -84,10 +94,18 @@ fun DeviceListItem(
                                 Toast.LENGTH_SHORT
                             ).show()
 
-                            else -> onLockStateChanged()
+                            else -> {
+                                unUnlockClick()
+                                isLocked = false
+                                Toast.makeText(
+                                    context,
+                                    deviceUnlockedToastMessage,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     },
-                    onNfcClicked = onNfcClicked,
+                    onNfcClick = onNfcClick,
                     onCustomizeClick = { showBottomSheet = true },
                     onDeleteClick = { showDeleteDialog = true },
                     onRenameClick = { showRenameDialog = true },
@@ -173,15 +191,14 @@ private fun DeviceListItemPreview() {
             device = Device(
                 macAddress = UUID.randomUUID().toString(),
                 name = "Backpack",
-                lockStatus = LockStatus.LOCKED,
                 uuid = UUID.randomUUID().toString(),
                 isConnected = false,
                 isVerified = false,
                 isConnectionLoading = false,
                 type = DeviceType.BACKPACK
             ),
-            onLockStateChanged = {},
-            onNfcClicked = {},
+            unUnlockClick = {},
+            onNfcClick = {},
             onDelete = {},
             onVerified = {},
             onRename = {},

@@ -12,8 +12,6 @@ interface DeviceRepository {
 
     suspend fun markDeviceAsVerified(macAddress: String)
 
-    suspend fun changeLockStatus(macAddress: String, lockStatusId: Int)
-
     suspend fun changeDeviceType(macAddress: String, typeId: Int)
 
     suspend fun updateUuid(macAddress: String, uuid: String)

@@ -36,15 +36,6 @@ class DeviceRepositoryImpl(private val deviceDao: DeviceDao) : DeviceRepository 
         }
     }
 
-    override suspend fun changeLockStatus(macAddress: String, lockStatusId: Int) {
-        withContext(Dispatchers.Default) {
-            val device = deviceDao.getDevice(macAddress)
-            deviceDao.updateDevice(
-                device.copy(lockStatusId = lockStatusId)
-            )
-        }
-    }
-
     override suspend fun changeDeviceType(macAddress: String, typeId: Int) {
         withContext(Dispatchers.Default) {
             val device = deviceDao.getDevice(macAddress)
