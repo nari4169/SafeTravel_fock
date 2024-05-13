@@ -1,5 +1,6 @@
 package com.example.safetravel.di
 
+import com.example.safetravel.presentation.viewmodel.AuthenticationViewModel
 import com.example.safetravel.presentation.viewmodel.MainViewModel
 import com.example.safetravel.presentation.viewmodel.PermissionsViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -11,4 +12,5 @@ val appModule = module {
     factory { CoroutineScope(Dispatchers.IO) }
     viewModelOf(::PermissionsViewModel)
     viewModelOf(::MainViewModel)
+    viewModelOf(::AuthenticationViewModel)
 }

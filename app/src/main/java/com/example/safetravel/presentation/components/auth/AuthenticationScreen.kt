@@ -12,42 +12,68 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.example.safetravel.R
+import com.example.safetravel.presentation.viewmodel.model.AuthenticationUiState
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun AuthenticationScreen(
+    uiState: AuthenticationUiState,
     onSuccess: () -> Unit,
+    onError: (Int) -> Unit,
+    onDigitClick: (String) -> Unit,
+    onBackspaceClick: () -> Unit,
+    onResetPinClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val activity = LocalContext.current as FragmentActivity
     val promptTitle = stringResource(R.string.lbl_authentication_prompt_title)
-    val promptSubtitle = stringResource(R.string.lbl_authentication_prompt_subtitle)
     val promptDescription = stringResource(R.string.lbl_authentication_prompt_description)
 
-    showAuthenticationPrompt(
-        promptTitle = promptTitle,
-        promptSubtitle = promptSubtitle,
-        promptDescription = promptDescription,
-        activity = activity,
-        onSuccess = {},
-        onError = {},
-        onFailed = {}
-    )
+    when (uiState.hasAuthenticationMethod) {
+        false -> {
+            showAuthenticationPrompt(
+                promptTitle = promptTitle,
+                promptDescription = promptDescription,
+                activity = activity,
+                onSuccess = onSuccess,
+                onError = onError
+            )
+
+            AuthenticationCanceledScreen(
+                modifier = modifier,
+                onClick = {
+                    showAuthenticationPrompt(
+                        promptTitle = promptTitle,
+                        promptDescription = promptDescription,
+                        activity = activity,
+                        onSuccess = onSuccess,
+                        onError = onError
+                    )
+                }
+            )
+        }
+
+        true -> AuthenticationPinScreen(
+            modifier = modifier,
+            hasPIN = uiState.hasPIN,
+            enteredPIN = uiState.enteredPIN,
+            onDigitClick = onDigitClick,
+            onBackspaceClick = onBackspaceClick,
+            onResetClick = onResetPinClick
+        )
+    }
 }
 
 internal fun showAuthenticationPrompt(
     promptTitle: String,
-    promptSubtitle: String,
     promptDescription: String,
     activity: FragmentActivity,
     onSuccess: () -> Unit,
-    onError: () -> Unit,
-    onFailed: () -> Unit
+    onError: (Int) -> Unit
 ) {
     val executor = ContextCompat.getMainExecutor(activity)
     val promptInfo = BiometricPrompt.PromptInfo.Builder()
         .setTitle(promptTitle)
-        .setSubtitle(promptSubtitle)
         .setDescription(promptDescription)
         .setAllowedAuthenticators(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
         .build()
@@ -56,17 +82,12 @@ internal fun showAuthenticationPrompt(
         object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
-                onError()
+                onError(errorCode)
             }
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
                 onSuccess()
-            }
-
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-                onFailed()
             }
         }
     )
