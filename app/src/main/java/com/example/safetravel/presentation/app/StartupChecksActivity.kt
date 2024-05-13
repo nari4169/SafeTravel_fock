@@ -60,7 +60,7 @@ class StartupChecksActivity : ComponentActivity() {
         }
 
         if (uiState.arePermissionsChecked && uiState.visiblePermissionDialogQueue.isEmpty()) {
-            MainActivity.startActivity(this@StartupChecksActivity)
+            AuthenticationActivity.startActivity(this@StartupChecksActivity)
             this@StartupChecksActivity.finish()
         }
 

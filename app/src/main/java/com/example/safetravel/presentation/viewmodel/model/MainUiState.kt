@@ -7,6 +7,5 @@ data class MainUiState(
     val bluetoothStatus: BluetoothStatus = BluetoothStatus.OFF,
     val devices: List<Device> = emptyList(),
     val isLoading: Boolean = true,
-    val nfcSelectedDeviceAddress: String? = null,
-    val isAuthenticationRequired: Boolean = true
+    val nfcSelectedDeviceAddress: String? = null
 )
