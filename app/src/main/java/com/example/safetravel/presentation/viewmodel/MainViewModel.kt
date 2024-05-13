@@ -37,6 +37,18 @@ class MainViewModel(
         }
     }
 
+    fun markAuthenticationRequired() {
+        _uiState.update {
+            it.copy(isAuthenticationRequired = true)
+        }
+    }
+
+    fun markAuthenticationDone() {
+        _uiState.update {
+            it.copy(isAuthenticationRequired = false)
+        }
+    }
+
     @SuppressLint("MissingPermission")
     fun addDevice(device: BluetoothDevice) {
         viewModelScope.launch {

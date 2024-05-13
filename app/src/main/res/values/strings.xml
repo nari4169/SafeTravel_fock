@@ -62,4 +62,9 @@
     <string name="lbl_rename_dialog_title">Rename device</string>
     <string name="lbl_rename">Rename</string>
 
+    <!--    AUTHENTICATION    -->
+    <string name="lbl_authentication_prompt_title">Authentication is needed</string>
+    <string name="lbl_authentication_prompt_subtitle">Scan fingerprint</string>
+    <string name="lbl_authentication_prompt_description">Please authenticate using the fingerprint or any other preferred methods.</string>
+
 </resources>

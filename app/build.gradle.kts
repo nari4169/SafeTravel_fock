@@ -58,6 +58,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+    // AUTH
+    implementation(libs.androidx.biometric)
+
     // COMPOSE
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.material3)

@@ -5,9 +5,10 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -31,16 +33,18 @@ import com.example.safetravel.R
 import com.example.safetravel.domain.isBluetoothPermissionGranted
 import com.example.safetravel.domain.model.BluetoothStatus
 import com.example.safetravel.domain.openBluetoothSettings
+import com.example.safetravel.presentation.components.auth.AuthenticationScreen
 import com.example.safetravel.presentation.components.permission.PermissionNotGrantedScreen
 import com.example.safetravel.presentation.theme.SafeTravelTheme
 import com.example.safetravel.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
 
     private val mainViewModel: MainViewModel by viewModel()
 
+    @RequiresApi(Build.VERSION_CODES.P)
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,19 +97,29 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) { padding ->
                     when {
-                        this.isBluetoothPermissionGranted() -> SafeTravelApp(
+                        !this.isBluetoothPermissionGranted() -> PermissionNotGrantedScreen(
+                            modifier = Modifier.padding(padding)
+                        )
+
+                        uiState.isAuthenticationRequired -> AuthenticationScreen(
+                            modifier = Modifier.padding(padding),
+                            onSuccess = mainViewModel::markAuthenticationDone
+                        )
+
+                        else -> SafeTravelApp(
                             viewModel = mainViewModel,
                             bondedDevices = bondedDevices,
                             modifier = Modifier.padding(padding),
-                        )
-
-                        else -> PermissionNotGrantedScreen(
-                            modifier = Modifier.padding(padding)
                         )
                     }
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mainViewModel.markAuthenticationRequired()
     }
 
     companion object {
