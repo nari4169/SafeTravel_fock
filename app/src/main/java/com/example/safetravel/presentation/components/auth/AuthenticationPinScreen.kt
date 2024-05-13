@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -37,6 +37,7 @@ private const val PIN_GRID_COLUMNS = 3
 fun AuthenticationPinScreen(
     hasPIN: Boolean,
     enteredPIN: String,
+    isError: Boolean,
     onDigitClick: (String) -> Unit,
     onBackspaceClick: () -> Unit,
     onResetClick: () -> Unit,
@@ -48,11 +49,7 @@ fun AuthenticationPinScreen(
         false -> R.string.lbl_no_authentication_method_no_pin to R.string.lbl_setup_pin
     }
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(150.dp, Alignment.Bottom),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(16.dp)
-    ) {
+    Column(modifier = modifier.padding(16.dp)) {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,32 +63,45 @@ fun AuthenticationPinScreen(
             Text(
                 text = stringResource(subtitleRes),
                 style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.Center
             )
         }
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.defaultMinSize(minHeight = 50.dp)
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.weight(1f)
         ) {
-            enteredPIN.forEach { digit ->
-                Text(
-                    text = digit.toString(),
-                    style = MaterialTheme.typography.displaySmall,
-                )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                enteredPIN.forEach { digit ->
+                    Text(
+                        text = digit.toString(),
+                        style = MaterialTheme.typography.displaySmall,
+                    )
+                }
+
+                repeat(emptyPinDigits) {
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .size(30.dp)
+                            .background(
+                                MaterialTheme.colorScheme.primary.copy(
+                                    alpha = EMPTY_PIN_DIGIT_ALPHA
+                                )
+                            )
+                    )
+                }
             }
 
-            repeat(emptyPinDigits) {
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(30.dp)
-                        .background(
-                            MaterialTheme.colorScheme.primary.copy(
-                                alpha = EMPTY_PIN_DIGIT_ALPHA
-                            )
-                        )
+            if (isError) {
+                Text(
+                    text = stringResource(R.string.lbl_wrong_pin),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.error,
                 )
             }
         }

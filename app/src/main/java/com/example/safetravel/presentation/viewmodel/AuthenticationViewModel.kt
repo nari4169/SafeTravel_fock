@@ -31,14 +31,20 @@ class AuthenticationViewModel : ViewModel() {
         val currentPIN = _uiState.value.enteredPIN
         if (currentPIN.isNotEmpty()) {
             _uiState.update {
-                it.copy(enteredPIN = currentPIN.take(currentPIN.length - 1))
+                it.copy(
+                    enteredPIN = currentPIN.take(currentPIN.length - 1),
+                    isError = false
+                )
             }
         }
     }
 
     fun resetPin() {
         _uiState.update {
-            it.copy(enteredPIN = EMPTY_PIN)
+            it.copy(
+                enteredPIN = EMPTY_PIN,
+                isError = false
+            )
         }
     }
 

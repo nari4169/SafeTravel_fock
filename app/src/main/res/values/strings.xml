@@ -72,5 +72,6 @@
     <string name="lbl_setup_pin">Setup PIN</string>
     <string name="lbl_enter_pin">Enter PIN</string>
     <string name="lbl_reset">Reset</string>
+    <string name="lbl_wrong_pin">Wrong PIN!</string>
 
 </resources>

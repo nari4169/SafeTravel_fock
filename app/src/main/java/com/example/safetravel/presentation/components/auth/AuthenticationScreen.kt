@@ -57,6 +57,7 @@ fun AuthenticationScreen(
             modifier = modifier,
             hasPIN = uiState.hasPIN,
             enteredPIN = uiState.enteredPIN,
+            isError = uiState.isError,
             onDigitClick = onDigitClick,
             onBackspaceClick = onBackspaceClick,
             onResetClick = onResetPinClick
