@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -49,54 +50,57 @@ fun AuthenticationPinScreen(
         false -> R.string.lbl_no_authentication_method_no_pin to R.string.lbl_setup_pin
     }
 
-    Column(modifier = modifier.padding(16.dp)) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.padding(16.dp)
+    ) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(titleRes),
+            style = MaterialTheme.typography.titleLarge,
+            textAlign = TextAlign.Center
+        )
+
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(subtitleRes),
+            style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = stringResource(titleRes),
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center
-            )
-
-            Text(
-                text = stringResource(subtitleRes),
-                style = MaterialTheme.typography.titleMedium,
-            )
-        }
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.weight(1f)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                enteredPIN.forEach { digit ->
-                    Text(
-                        text = digit.toString(),
-                        style = MaterialTheme.typography.displaySmall,
-                    )
-                }
-
-                repeat(emptyPinDigits) {
-                    Box(
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .size(30.dp)
-                            .background(
-                                MaterialTheme.colorScheme.primary.copy(
-                                    alpha = EMPTY_PIN_DIGIT_ALPHA
-                                )
-                            )
-                    )
-                }
+            enteredPIN.forEach { digit ->
+                Text(
+                    text = digit.toString(),
+                    style = MaterialTheme.typography.displaySmall,
+                )
             }
 
+            repeat(emptyPinDigits) {
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(30.dp)
+                        .background(
+                            MaterialTheme.colorScheme.primary.copy(
+                                alpha = EMPTY_PIN_DIGIT_ALPHA
+                            )
+                        )
+                )
+            }
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.weight(1f)
+        ){
             if (isError) {
                 Text(
                     text = stringResource(R.string.lbl_wrong_pin),
@@ -105,7 +109,6 @@ fun AuthenticationPinScreen(
                 )
             }
         }
-
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(PIN_GRID_COLUMNS),

@@ -30,7 +30,7 @@ fun AuthenticationScreen(
     val promptDescription = stringResource(R.string.lbl_authentication_prompt_description)
 
     when (uiState.hasAuthenticationMethod) {
-        false -> {
+        true -> {
             showAuthenticationPrompt(
                 promptTitle = promptTitle,
                 promptDescription = promptDescription,
@@ -53,7 +53,7 @@ fun AuthenticationScreen(
             )
         }
 
-        true -> AuthenticationPinScreen(
+        false -> AuthenticationPinScreen(
             modifier = modifier,
             hasPIN = uiState.hasPIN,
             enteredPIN = uiState.enteredPIN,

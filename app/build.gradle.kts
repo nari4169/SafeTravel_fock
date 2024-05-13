@@ -81,6 +81,9 @@ dependencies {
     // PERMISSIONS
     implementation(libs.google.accompanist.permissions)
 
+    // PREFERENCES
+    implementation(libs.datastore.preferences)
+
     // TEST
     androidTestImplementation(libs.test.espresso.core)
     androidTestImplementation(libs.test.ext)
