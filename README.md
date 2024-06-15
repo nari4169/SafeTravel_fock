@@ -1,3 +1,5 @@
+# SafeTravel
+
 This project is a mobile application developed in Kotlin using Jetpack Compose. <br />
 The app is designed to securely connect to a hardware component via Bluetooth 3.0 to unlock a suitcase. <br />
 It features biometric login, custom PIN login, and a user-friendly interface for managing multiple Bluetooth devices.<br />
