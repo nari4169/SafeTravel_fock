@@ -25,3 +25,17 @@ It features biometric login, custom PIN login, and a user-friendly interface for
 **•Good Architecture:** Applied best practices in architecture design for maintainability and scalability.<br />
 **•Dependency Injection:** Utilized Koin for efficient dependency injection.<br />
 **•Material 3 Theming:** Demonstrated a strong grasp of the Material 3 design system and its components.<br />
+
+<p float="left">
+  <img src="https://github.com/SemenciucCosmin/SafeTravel/blob/main/screenshots/SafeTravel_Light_Authentication.jpeg" width="180">
+  <img src="https://github.com/SemenciucCosmin/SafeTravel/blob/main/screenshots/SafeTravel_Light_Devices_List.jpeg" width="180">
+  <img src="https://github.com/SemenciucCosmin/SafeTravel/blob/main/screenshots/SafeTravel_Light_Customize.jpeg" width="180">
+  <img src="https://github.com/SemenciucCosmin/SafeTravel/blob/main/screenshots/SafeTravel_Light_Add_Device.jpeg" width="180">
+</p>
+
+<p float="left">
+  <img src="https://github.com/SemenciucCosmin/SafeTravel/blob/main/screenshots/SafeTravel_Dark_Authentication.jpeg" width="180">
+  <img src="https://github.com/SemenciucCosmin/SafeTravel/blob/main/screenshots/SafeTravel_Dark_Devices_List.jpeg" width="180">
+  <img src="https://github.com/SemenciucCosmin/SafeTravel/blob/main/screenshots/SafeTravel_Dark_Customize.jpeg" width="180">
+  <img src="https://github.com/SemenciucCosmin/SafeTravel/blob/main/screenshots/SafeTravel_Dark_Add_Device.jpeg" width="180">
+</p>
