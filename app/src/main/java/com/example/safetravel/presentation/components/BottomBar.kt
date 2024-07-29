@@ -1,6 +1,7 @@
 package com.example.safetravel.presentation.components
 
 import android.content.res.Configuration
+import android.os.ParcelUuid
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -75,6 +76,10 @@ fun BottomBar(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun BottomBarPreview() {
+    val uuidString = "00001101-0000-1000-8000-00805f9b34fb"
+    val parcelUuid = ParcelUuid.fromString(uuidString)
+    var parcelUuids = arrayOf(parcelUuid)
+
     SafeTravelTheme {
         BottomBar(
             nfcDevice = Device(
@@ -84,7 +89,8 @@ private fun BottomBarPreview() {
                 isConnected = false,
                 isVerified = false,
                 isConnectionLoading = false,
-                type = DeviceType.BACKPACK
+                type = DeviceType.BACKPACK,
+                uuids = parcelUuids
             ),
             onFloatingActionButtonClick = {}
         )

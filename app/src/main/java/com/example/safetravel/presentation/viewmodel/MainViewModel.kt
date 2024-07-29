@@ -43,7 +43,8 @@ class MainViewModel(
             deviceRepository.addDevice(
                 Device(
                     macAddress = device.address,
-                    name = device.name
+                    name = device.name,
+                    uuids = device.uuids,
                 )
             )
         }

@@ -4,6 +4,10 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
+val softGray = Color(0xFFF4F4F4)
+val softBlue = Color(0xFF5e82fc)
+val softWhite = Color(0xFFFFFFFF)
+
 val SafeTravelLightColorScheme = lightColorScheme(
     /**
      *  Status bar

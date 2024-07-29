@@ -1,6 +1,7 @@
 package com.example.safetravel.presentation.components.devicelistitem
 
 import android.content.res.Configuration
+import android.os.ParcelUuid
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -73,6 +74,11 @@ fun DeviceContent(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun DeviceContentPreview() {
+
+    val uuidString = "00001101-0000-1000-8000-00805f9b34fb"
+    val parcelUuid = ParcelUuid.fromString(uuidString)
+    var parcelUuids = arrayOf(parcelUuid)
+
     SafeTravelTheme {
         DeviceContent(
             device = Device(
@@ -82,7 +88,8 @@ private fun DeviceContentPreview() {
                 isConnected = false,
                 isVerified = false,
                 isConnectionLoading = false,
-                type = DeviceType.BACKPACK
+                type = DeviceType.BACKPACK,
+                uuids = parcelUuids
 
             ),
             isLocked = true,

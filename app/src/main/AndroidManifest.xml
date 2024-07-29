@@ -24,7 +24,6 @@
         <activity
             android:name=".presentation.app.StartupChecksActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.SafeTravel">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,13 +35,11 @@
         <activity
             android:name=".presentation.app.AuthenticationActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.SafeTravel" />
 
         <activity
             android:name=".presentation.app.MainActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.SafeTravel" />
     </application>
 

@@ -1,22 +1,33 @@
 package com.example.safetravel.presentation.components.devicelistitem
 
 import android.content.res.Configuration
+import android.os.ParcelUuid
 import android.widget.Toast
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -34,11 +45,15 @@ import com.example.safetravel.presentation.components.dialog.RenameDialog
 import com.example.safetravel.presentation.components.dialog.VerificationDialog
 import com.example.safetravel.presentation.model.DeviceType
 import com.example.safetravel.presentation.theme.SafeTravelTheme
+import com.example.safetravel.presentation.theme.softBlue
+import com.example.safetravel.presentation.theme.softGray
+import com.example.safetravel.presentation.theme.softWhite
+import com.example.safetravel.presentation.theme.typography
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun DeviceListItem(
     device: Device,
@@ -66,6 +81,15 @@ fun DeviceListItem(
         if (!isLocked) {
             delay(1000)
             isLocked = true
+        }
+    }
+
+    val uuids = remember { mutableStateListOf("") }
+    val selected = remember { mutableStateOf(false) }
+    uuids.clear()
+    device.uuids?.map {
+        if (uuids.indexOf(it.toString()) < 0) {
+            uuids.add(it.toString())
         }
     }
 
@@ -124,6 +148,35 @@ fun DeviceListItem(
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                 }
+
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp))
+                FlowRow(
+                    modifier = Modifier
+                        .padding(3.dp)
+                        .border(1.dp, softGray),
+                ) {
+                    uuids.forEach {
+                        FilterChip(
+                            selected.value,
+                            onClick = {
+                                //doConnectDevice(device, it)
+                            },
+                            label = {
+                                Text(text = it, style = typography.bodyMedium.copy(softWhite))
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.RadioButtonUnchecked,
+                                    contentDescription = it,
+                                    tint = softGray
+                                )
+                            },
+                            colors = FilterChipDefaults.filterChipColors(containerColor = softBlue),
+                            modifier = Modifier.padding(3.dp)
+                        )
+                    }
+                }
+
             }
         }
     }
@@ -186,6 +239,10 @@ fun DeviceListItem(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun DeviceListItemPreview() {
+    val uuidString = "00001101-0000-1000-8000-00805f9b34fb"
+    val parcelUuid = ParcelUuid.fromString(uuidString)
+    var parcelUuids = arrayOf(parcelUuid)
+
     SafeTravelTheme {
         DeviceListItem(
             device = Device(
@@ -195,7 +252,8 @@ private fun DeviceListItemPreview() {
                 isConnected = false,
                 isVerified = false,
                 isConnectionLoading = false,
-                type = DeviceType.BACKPACK
+                type = DeviceType.BACKPACK,
+                uuids = parcelUuids
             ),
             unUnlockClick = {},
             onNfcClick = {},
