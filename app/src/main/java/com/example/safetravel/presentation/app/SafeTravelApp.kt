@@ -2,6 +2,7 @@ package com.example.safetravel.presentation.app
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,6 +38,7 @@ fun SafeTravelApp(
     viewModel: MainViewModel,
     bondedDevices: List<BluetoothDevice>,
     modifier: Modifier = Modifier,
+    doFindBluetooth:() -> Unit
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -66,6 +68,7 @@ fun SafeTravelApp(
             else -> DevicesScreen(
                 devices = uiState.devices,
                 handler = viewModel,
+                viewModel = viewModel,
                 bondedDevices = bondedDevices,
                 onNfcDeviceSelected = viewModel::selectNfcDevice,
                 onDeleteDevice = viewModel::deleteDevice,
@@ -104,7 +107,9 @@ fun SafeTravelApp(
             onDismissRequest = { showBottomSheet = false },
             content = {
                 AddDeviceScreen(
+                    isScanning = viewModel.isScaning.value,
                     bondedDevices = bondedDevices.filter { bondedDevice ->
+                        Log.e("", "bondedDevice ${bondedDevice.name} ${bondedDevice.address}")
                         bondedDevice.address !in uiState.devices.map { it.macAddress }
                     },
                     onDeviceClick = { bluetoothDevice ->
@@ -113,7 +118,8 @@ fun SafeTravelApp(
                             showBottomSheet = false
                             viewModel.addDevice(bluetoothDevice)
                         }
-                    }
+                    },
+                    doFindBluetooth = doFindBluetooth
                 )
             }
         )

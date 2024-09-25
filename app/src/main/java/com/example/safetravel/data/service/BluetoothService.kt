@@ -22,34 +22,35 @@ class BluetoothService(
     private var connectedThread: ConnectedThread? = null
 
     init {
-        Log.i(TAG, "Start connection to device: ${device.address}")
+        Log.e(TAG, "Start connection to device: ${device.address}")
         handler.onStartConnecting(device.address)
         connect(SocketType.SECURE)
     }
 
     @SuppressLint("MissingPermission")
     override fun onSocketCreated(socketType: SocketType) {
-        Log.i(TAG, "Socket: $socketType created for device: ${device.address}")
+        Log.e(TAG, "Socket: $socketType created for device: ${device.address}")
         val service = context.getSystemService(Context.BLUETOOTH_SERVICE)
         val adapter = (service as BluetoothManager).adapter
         context.runWithBluetoothPermission { adapter.cancelDiscovery() }
     }
 
     override fun onConnected(socket: BluetoothSocket, socketType: SocketType) {
-        Log.i(TAG, "Connected to device: ${device.address}")
+        Log.e(TAG, "Connected to device: ${device.address}")
         handler.onConnectionSuccess(macAddress = device.address)
-        connectedThread = ConnectedThread(
-            socket = socket,
-            socketType = socketType,
-            listener = this
-        ).apply { start() }
-
-        connectedThread?.write(DeviceMessage.CONNECTED.tag.toByteArray())
+        if (socket.isConnected) {
+            connectedThread = ConnectedThread(
+                socket = socket,
+                socketType = socketType,
+                listener = this
+            ).apply { start() }
+            connectedThread?.write(DeviceMessage.CONNECTED.tag.toByteArray())
+        }
     }
 
     override fun onReadMessage(inputBytes: Int, buffer: ByteArray) {
         val message = String(buffer, NO_OFFSET, inputBytes)
-        Log.i(TAG, "Read message from device: ${device.address}, message: $message")
+        Log.e(TAG, "Read message from device: ${device.address}, message: $message")
         handler.onReadMessage(
             macAddress = device.address,
             message = message
@@ -57,17 +58,17 @@ class BluetoothService(
     }
 
     override fun onWriteMessage(isSuccessful: Boolean) {
-        Log.i(TAG, "Write message to device: ${device.address}, successful: $isSuccessful")
+        Log.e(TAG, "Write message to device: ${device.address}, successful: $isSuccessful")
         handler.onWriteMessage(device.address, isSuccessful)
     }
 
     override fun onConnectionFailed() {
-        Log.i(TAG, "Connection failed for device: ${device.address}")
+        Log.e(TAG, "Connection failed for device: ${device.address}")
         handler.onConnectionFailed(device.address)
     }
 
     override fun onConnectionLost() {
-        Log.i(TAG, "Connection lost for device: ${device.address}")
+        Log.e(TAG, "Connection lost for device: ${device.address}")
         handler.onConnectionLost(device.address)
     }
 
@@ -76,25 +77,27 @@ class BluetoothService(
         context.runWithBluetoothPermission(block)
     }
 
+    @SuppressLint("MissingPermission")
     private fun connect(socketType: SocketType) {
-        Log.i(TAG, "Start connecting to device: ${device.address}")
+        Log.e(TAG, "Start connecting to device: ${device.name}")
         connectThread = ConnectThread(device, socketType, this).apply { start() }
     }
 
+    @SuppressLint("MissingPermission")
     fun retryConnection() {
-        Log.i(TAG, "Retry connection for device: ${device.address}")
+        Log.e(TAG, "Retry connection for device: ${device.name}")
         handler.onStartConnecting(device.address)
         connect(SocketType.SECURE)
     }
 
     fun write(message: String, uuid: String) {
-        Log.i(TAG, "Write to bluetooth device: ${device.address}")
+        Log.e(TAG, "Write to bluetooth device: ${device.address}")
         val messageWithUuid = "$message;$uuid"
         connectedThread?.write(messageWithUuid.toByteArray())
     }
 
     fun stop() {
-        Log.i(TAG, "Stop all processes for device: ${device.address}")
+        Log.e(TAG, "Stop all processes for device: ${device.address}")
         connectThread?.let {
             it.closeSocket()
             connectThread = null

@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material3.CardDefaults
@@ -37,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.safetravel.R
 import com.example.safetravel.domain.model.Device
 import com.example.safetravel.presentation.components.CustomizationScreen
@@ -49,6 +52,7 @@ import com.example.safetravel.presentation.theme.softBlue
 import com.example.safetravel.presentation.theme.softGray
 import com.example.safetravel.presentation.theme.softWhite
 import com.example.safetravel.presentation.theme.typography
+import com.example.safetravel.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -57,13 +61,15 @@ import java.util.UUID
 @Composable
 fun DeviceListItem(
     device: Device,
+    viewModel: MainViewModel,
     unUnlockClick: () -> Unit,
     onNfcClick: () -> Unit,
     onDelete: () -> Unit,
     onVerified: () -> Unit,
     onRename: (String) -> Unit,
     onTypeChanged: (DeviceType) -> Unit,
-    onRetryConnection: () -> Unit
+    onRetryConnection: () -> Unit,
+    doConnectDevice: (device: Device) -> Unit,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -155,11 +161,39 @@ fun DeviceListItem(
                         .padding(3.dp)
                         .border(1.dp, softGray),
                 ) {
+                    viewModel.recvMsgs.forEach {
+                        FilterChip(
+                            selected.value,
+                            onClick = {
+
+                            },
+                            label = {
+                                Text(text = it, style = typography.bodyMedium.copy(softWhite))
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.RadioButtonUnchecked,
+                                    contentDescription = it,
+                                    tint = softGray
+                                )
+                            },
+                            colors = FilterChipDefaults.filterChipColors(containerColor = softBlue),
+                            modifier = Modifier.padding(3.dp)
+                        )
+                    }
+                }
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp))
+
+                FlowRow(
+                    modifier = Modifier
+                        .padding(3.dp)
+                        .border(1.dp, softGray),
+                ) {
                     uuids.forEach {
                         FilterChip(
                             selected.value,
                             onClick = {
-                                //doConnectDevice(device, it)
+                                doConnectDevice(device)
                             },
                             label = {
                                 Text(text = it, style = typography.bodyMedium.copy(softWhite))
@@ -255,6 +289,7 @@ private fun DeviceListItemPreview() {
                 type = DeviceType.BACKPACK,
                 uuids = parcelUuids
             ),
+            viewModel = viewModel(),
             unUnlockClick = {},
             onNfcClick = {},
             onDelete = {},
@@ -262,6 +297,7 @@ private fun DeviceListItemPreview() {
             onRename = {},
             onTypeChanged = {},
             onRetryConnection = {},
+            doConnectDevice = {}
         )
     }
 }

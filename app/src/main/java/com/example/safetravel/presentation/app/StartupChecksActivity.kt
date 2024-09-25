@@ -2,6 +2,7 @@ package com.example.safetravel.presentation.app
 
 import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -21,6 +22,9 @@ import org.koin.androidx.compose.koinViewModel
 class StartupChecksActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.e("", "StartupChecksActivity onCreate ...")
+
         setContent {
             SafeTravelTheme {
                 PermissionsCheck()

@@ -20,7 +20,7 @@ koin-compose = "3.5.3"
 accompanist-permissions = "0.34.0"
 
 # PLUGINS
-android-gradle-plugin = "8.5.1"
+android-gradle-plugin = "8.6.1"
 google-ksp = "2.0.0-1.0.22"
 kotlin-android = "2.0.0"
 kotlin = "2.0.0"

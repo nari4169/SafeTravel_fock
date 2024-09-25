@@ -1,5 +1,6 @@
 package com.example.safetravel.presentation.components
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -22,13 +23,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.safetravel.R
-import com.example.safetravel.domain.openBluetoothSettings
 import com.example.safetravel.presentation.theme.SafeTravelTheme
+import com.example.safetravel.presentation.viewmodel.MainViewModel
 
+@SuppressLint("MissingPermission")
 @Composable
 fun AddDeviceScreen(
     bondedDevices: List<BluetoothDevice>,
-    onDeviceClick: (BluetoothDevice) -> Unit
+    onDeviceClick: (BluetoothDevice) -> Unit,
+    doFindBluetooth: () -> Unit,
+    isScanning: Boolean
 ) {
     val context = LocalContext.current
 
@@ -48,19 +52,23 @@ fun AddDeviceScreen(
             textAlign = TextAlign.Center
         )
 
-        FilledTonalButton(onClick = { context.openBluetoothSettings() }) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+        if (!isScanning) {
+            FilledTonalButton(
+                onClick = doFindBluetooth // { context.openBluetoothSettings() }
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_bluetooth_pair),
-                    contentDescription = null
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_bluetooth_pair),
+                        contentDescription = null
+                    )
 
-                Text(
-                    text = stringResource(R.string.lbl_pair_device),
-                )
+                    Text(
+                        text = stringResource(R.string.lbl_pair_device),
+                    )
+                }
             }
         }
 
@@ -72,10 +80,13 @@ fun AddDeviceScreen(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun AddDeviceScreenPreview() {
+
     SafeTravelTheme {
         AddDeviceScreen(
             bondedDevices = emptyList(),
-            onDeviceClick = {}
+            onDeviceClick = {},
+            doFindBluetooth = {},
+            isScanning = false
         )
     }
 }

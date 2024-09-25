@@ -73,5 +73,7 @@
     <string name="lbl_enter_pin">Enter PIN</string>
     <string name="lbl_reset">Reset</string>
     <string name="lbl_wrong_pin">Wrong PIN!</string>
+    <string name="lbl_already_scanning">Already Scanning ...</string>
+    <string name="lbl_stop_scanning">Stop Scanning !</string>
 
 </resources>

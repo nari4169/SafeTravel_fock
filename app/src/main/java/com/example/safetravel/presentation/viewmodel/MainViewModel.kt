@@ -3,6 +3,8 @@ package com.example.safetravel.presentation.viewmodel
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.safetravel.data.datasource.BluetoothStatusDataSource
@@ -27,6 +29,11 @@ class MainViewModel(
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState = _uiState.asStateFlow()
 
+    var bluetoothDevices = mutableStateListOf<BluetoothDevice>()
+
+    val recvMsgs = mutableStateListOf<String>()
+    val isScaning = mutableStateOf(false)
+
     init {
         viewModelScope.launch {
             bluetoothDataSource.bluetoothStatus.collectLatest { bluetoothStatus ->
@@ -39,12 +46,16 @@ class MainViewModel(
 
     @SuppressLint("MissingPermission")
     fun addDevice(device: BluetoothDevice) {
+        recvMsgs.clear()
         viewModelScope.launch {
+            Log.e("", "........................... addDevice ${device.name}")
             deviceRepository.addDevice(
                 Device(
                     macAddress = device.address,
                     name = device.name,
-                    uuids = device.uuids,
+                    uuids = device.uuids ?: emptyArray(),
+                    isConnectionLoading = false,
+                    isConnected = true
                 )
             )
         }
@@ -147,13 +158,13 @@ class MainViewModel(
     }
 
     override fun onReadMessage(macAddress: String, message: String) {
-        Log.d(TAG, "onReadMessage(), macAddress: $macAddress, message: $message")
+        Log.e(TAG, "onReadMessage(), macAddress: $macAddress, message: $message")
+        recvMsgs.add(String.format("onReadMessage=%s, %s, %s", message, DeviceMessage.getByTag(message), DeviceMessage.UUID))
         if (DeviceMessage.getByTag(message) == DeviceMessage.UUID) {
             val uuid = message.split(MESSAGE_SEPARATOR)[UUID_MESSAGE_INDEX].replace(
                 oldValue = DeviceMessage.UUID.tag,
                 newValue = BLANK
             )
-
             viewModelScope.launch {
                 deviceRepository.updateUuid(macAddress, uuid)
             }

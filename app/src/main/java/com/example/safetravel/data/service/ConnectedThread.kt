@@ -2,6 +2,7 @@ package com.example.safetravel.data.service
 
 import android.bluetooth.BluetoothSocket
 import android.util.Log
+import android.widget.Toast
 import com.example.safetravel.domain.model.SocketType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking

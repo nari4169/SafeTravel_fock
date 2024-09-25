@@ -25,11 +25,13 @@ import com.example.safetravel.domain.model.Device
 import com.example.safetravel.domain.model.DeviceMessage
 import com.example.safetravel.presentation.components.devicelistitem.DeviceListItem
 import com.example.safetravel.presentation.model.DeviceType
+import com.example.safetravel.presentation.viewmodel.MainViewModel
 
 @Composable
 fun DevicesScreen(
     devices: List<Device>,
     handler: BluetoothServiceHandler,
+    viewModel: MainViewModel,
     bondedDevices: List<BluetoothDevice>,
     onNfcDeviceSelected: (String) -> Unit,
     onDeleteDevice: (String) -> Unit,
@@ -77,6 +79,7 @@ fun DevicesScreen(
         items(devices) { device ->
             DeviceListItem(
                 device = device,
+                viewModel = viewModel,
                 unUnlockClick = {
                     val service = bluetoothServices.first { it.device.address == device.macAddress }
                     device.uuid?.let { service.write(DeviceMessage.UNLOCK.tag, it) }
@@ -106,6 +109,10 @@ fun DevicesScreen(
                 onRetryConnection = {
                     val service = bluetoothServices.first { it.device.address == device.macAddress }
                     service.retryConnection()
+                },
+                doConnectDevice = {
+                    device.isConnected = true
+                    device.isConnectionLoading = false
                 }
             )
         }
